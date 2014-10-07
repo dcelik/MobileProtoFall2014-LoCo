@@ -1,2 +1,2 @@
-MobileProtoFall2014-Loco
+MobileProtoFall2014-LoCo
 ========================
