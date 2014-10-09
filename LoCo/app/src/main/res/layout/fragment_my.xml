@@ -8,9 +8,22 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MyActivity$PlaceholderFragment">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
+    <!--<TextView-->
+        <!--android:text="@string/hello_world"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+    <Button
+        android:id="@+id/login_button"
+        android:text = "Login"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="120dp"
         android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/username"
+        android:layout_above="@id/login_button"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
