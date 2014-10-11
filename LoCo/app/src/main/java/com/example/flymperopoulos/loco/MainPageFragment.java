@@ -26,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.MapView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,6 +65,15 @@ public class MainPageFragment extends Fragment implements LocationListener{
         requestListview.setAdapter(requestAdapter);
 // Instantiate the RequestQueue.
 
+        Button changetomap = (Button) rootView.findViewById(R.id.changtomap);
+        changetomap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyActivity activity = (MyActivity)getActivity();
+                activity.changeToMap();
+            }
+        });
+
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         String url = "https://maps.googleapis.com/maps/api/geocode/";
@@ -98,7 +108,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
                             String stuff = response.getJSONArray("results").get(1).toString();
 //                            String address = response.get("result").toString();
                             Log.i(stuff, "What is in the json\n\n\n\n");
-                            display.setText(stuff);
+//                            display.setText(stuff);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -123,8 +133,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-        int lat = (int) (location.getLatitude());
-        int lng = (int) (location.getLongitude());
+        double lat = (location.getLatitude());
+        double lng = (location.getLongitude());
         latituteField.setText(String.valueOf(lat));
         longitudeField.setText(String.valueOf(lng));
     }

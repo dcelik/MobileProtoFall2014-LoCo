@@ -62,4 +62,11 @@
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"></ListView>
 
+    <Button
+        android:id= "@+id/changtomap"
+        android:layout_width="120dp"
+        android:text="Map"
+        android:layout_below="@id/contacts"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

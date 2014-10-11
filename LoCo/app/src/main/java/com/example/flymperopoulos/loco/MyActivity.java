@@ -57,4 +57,13 @@ public class MyActivity extends Activity {
         transaction.commit();
     }
 
+    public void changeToMap(){
+        MapFragment fragment = new MapFragment();
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.commit();
+    }
+
 }
