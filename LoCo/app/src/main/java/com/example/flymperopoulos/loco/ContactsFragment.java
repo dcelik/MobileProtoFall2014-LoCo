@@ -6,8 +6,10 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +17,13 @@ import android.widget.AdapterView;
 //import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /**
  * Created by flymperopoulos on 10/13/2014.
@@ -60,42 +65,42 @@ public class ContactsFragment extends Fragment{
 
 
 
-        list=readContacts();
+        list= new ArrayAdapter<PhoneContactInfo>(getActivity(), R.layout.contact_item, readContacts());
         ListView lv=(ListView) rootView.findViewById(R.id.list);
         lv.setAdapter(list);
 
         return rootView;
 
     }
-    public ListAdapter readContacts(){
-        ContentResolver cr = context.getContentResolver();
-        ListAdapter cd = new ArrayList<Contact_getActivity>();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
-                null, null, null, ContactsContract.Contacts.DISPLAY_NAME);
+    public ArrayList<PhoneContactInfo> readContacts() {
+        Log.d("START", "Getting all Contacts");
+        ArrayList<PhoneContactInfo> arrContacts = new ArrayList<PhoneContactInfo>();
+        PhoneContactInfo phoneContactInfo=null;
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        Cursor cursor = context.getContentResolver().query(uri, new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone._ID}, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+        cursor.moveToFirst();
+        while (cursor.isAfterLast() == false)
+        {
+            String contactNumber= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            String contactName =  cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+            int phoneContactID = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
 
-        if (cur.getCount() > 0) {
-            while (cur.moveToNext()) {
-                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                if (Integer.parseInt(cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
 
-                    // get the phone number
-                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        String phone = pCur.getString(
-                                pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        //                         if (!Utils.isEmpty(phone)) {
-                        //                             cd.add(new ContactData(id, name, phone));
-                        //                         }
-                    }
-                    pCur.close();
-
-                }
+            phoneContactInfo = new PhoneContactInfo();
+            phoneContactInfo.setPhoneContactID(phoneContactID);
+            phoneContactInfo.setContactName(contactName);
+            phoneContactInfo.setContactNumber(contactNumber);
+            if (phoneContactInfo != null)
+            {
+                arrContacts.add(phoneContactInfo);
             }
+            phoneContactInfo = null;
+            cursor.moveToNext();
         }
-        return cd;
-
+        cursor.close();
+        cursor = null;
+        Log.d("END","Got all Contacts");
+        return arrContacts;
     }
 }
+
