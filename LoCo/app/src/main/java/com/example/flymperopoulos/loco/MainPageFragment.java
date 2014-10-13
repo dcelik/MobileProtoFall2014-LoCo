@@ -87,7 +87,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(provider);
+        final Location location = locationManager.getLastKnownLocation(provider);
         locationManager.requestLocationUpdates(provider, 0, 0 , this);
         if (location != null) {
             onLocationChanged(location);
@@ -158,5 +158,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
     public void onProviderDisabled(String s) {
 
     }
+
 
 }
