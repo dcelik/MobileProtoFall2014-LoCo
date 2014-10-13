@@ -37,6 +37,7 @@ import java.util.ArrayList;
 /**
  * Created by james on 10/9/14.
  */
+
 public class MainPageFragment extends Fragment implements LocationListener{
 
     private LocationManager locationManager;
