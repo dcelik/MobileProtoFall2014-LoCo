@@ -61,6 +61,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         ArrayList<String> list = new ArrayList<String>();
         list.add("hi");
         list.add("stuff");
+
         ArrayAdapter<String> requestAdapter = new ArrayAdapter<String>(getActivity(), R.layout.request_my, R.id.row, list);
         requestListview.setAdapter(requestAdapter);
 // Instantiate the RequestQueue.
@@ -107,7 +108,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         try {
                             String stuff = response.getJSONArray("results").get(1).toString();
 //                            String address = response.get("result").toString();
-                            Log.i(stuff, "What is in the json\n\n\n\n");
+                            Log.d(stuff, "What is in the json\n\n\n\n");
 //                            display.setText(stuff);
 
                         } catch (JSONException e) {
@@ -128,7 +129,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
     @Override
     public void onPause() {
         super.onPause();
-        locationManager.removeUpdates(this);
+        if(locationManager != null) {
+            locationManager.removeUpdates(this);
+        }
     }
 
     @Override
@@ -147,6 +150,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
     @Override
     public void onProviderEnabled(String s) {
+//        Toast.makeText(this, "Enable"+ provider, Toast.LENGTH_SHORT).show();
 
     }
 
