@@ -1,23 +1,20 @@
 package com.example.flymperopoulos.loco;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.location.Location;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
-import java.util.ArrayList;
+import com.firebase.client.Firebase;
+
 
 
 public class MyActivity extends Activity {
+
+    HandlerDatabase db;
+    Firebase fb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +25,9 @@ public class MyActivity extends Activity {
                     .add(R.id.container, new LoginFragment())
                     .commit();
         }
+        db = new HandlerDatabase(this);
+        fb = new Firebase("https://scorching-fire-1825.firebaseio.com/Users");
+        db.open();
     }
 
 
