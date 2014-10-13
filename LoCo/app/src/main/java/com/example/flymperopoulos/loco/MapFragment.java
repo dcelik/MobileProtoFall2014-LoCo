@@ -28,7 +28,6 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mapfragment_my, container, false);
-//
 
         mapView = ((MapView) rootView.findViewById(R.id.map));
         mapView.onCreate(savedInstanceState);
@@ -43,7 +42,6 @@ public class MapFragment extends Fragment {
         });
 
         return rootView;
-
     }
 
     private void setupMap() {

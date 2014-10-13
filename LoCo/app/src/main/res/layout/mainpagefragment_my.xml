@@ -68,6 +68,12 @@
         android:text="Map"
         android:layout_below="@id/contacts"
         android:layout_height="wrap_content" />
+    <Button
+        android:id= "@+id/displaycontact"
+        android:layout_width="120dp"
+        android:text="Contacts"
+        android:layout_below="@id/changtomap"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id= "@+id/changetocontacts"
