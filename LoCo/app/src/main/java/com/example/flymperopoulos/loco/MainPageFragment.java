@@ -98,6 +98,15 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         final TextView display = (TextView)rootView.findViewById(R.id.display);
 
+        Button changeToContact = (Button) rootView.findViewById(R.id.displaycontact);
+        changeToContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyActivity activity = (MyActivity)getActivity();
+                activity.changeToContact();
+            }
+        });
+
 
 // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url1, null,
