@@ -1,5 +1,6 @@
 package com.example.flymperopoulos.loco;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,44 +20,33 @@ import java.util.ArrayList;
 /**
  * Created by flymperopoulos on 10/13/2014.
  */
-
-//public class ContactsFragment extends android.app.Fragment implements
-//        LoaderManager.LoaderCallbacks<Cursor>,
-//        AdapterView.OnItemClickListener {
-//
-//    @Override
-//    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-//        return null;
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-//
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-//
-//    }
-//
-//    @Override
-//    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//    }
-//}
 public class ContactsFragment extends Fragment{
-    ListAdapter list;
+    PhoneContactInfoAdapter list;
     Context context;
 
     public ContactsFragment(){}
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.contacts_list_view, container, false);
 
+        Button backBtn = (Button)rootView.findViewById(R.id.back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyActivity activity = (MyActivity)getActivity();
+                activity.changeToMainFragment();
+            }
+        });
 
-
-        list= new ArrayAdapter<PhoneContactInfo>(getActivity(), R.layout.contact_item, readContacts());
+        ArrayList<PhoneContactInfo> contacts = readContacts();
+        list= new PhoneContactInfoAdapter(getActivity(), R.layout.contact_item, contacts);
         ListView lv=(ListView) rootView.findViewById(R.id.list);
         lv.setAdapter(list);
 
@@ -68,7 +58,12 @@ public class ContactsFragment extends Fragment{
         ArrayList<PhoneContactInfo> arrContacts = new ArrayList<PhoneContactInfo>();
         PhoneContactInfo phoneContactInfo=null;
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        Cursor cursor = context.getContentResolver().query(uri, new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,ContactsContract.CommonDataKinds.Phone._ID}, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+        Cursor cursor = context.getContentResolver().query(uri,
+                new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Phone._ID},
+                null, null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false)
         {

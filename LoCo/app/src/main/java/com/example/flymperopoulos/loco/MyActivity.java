@@ -75,5 +75,19 @@ public class MyActivity extends Activity {
         transaction.replace(R.id.container, fragment);
         transaction.commit();
     }
+    public void goBack()
+    {
+        FragmentManager fm = getFragmentManager();
+        fm.popBackStack();
+    }
+    public void changeToMainFragment(){
+        MainPageFragment fragment = new MainPageFragment();
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.commit();
+    }
+
 
 }

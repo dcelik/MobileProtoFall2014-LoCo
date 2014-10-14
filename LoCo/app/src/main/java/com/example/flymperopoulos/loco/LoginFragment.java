@@ -24,6 +24,8 @@ public class LoginFragment extends Fragment {
 
 
         EditText userName = (EditText)rootView.findViewById(R.id.username);
+        EditText userPhone = (EditText)rootView.findViewById(R.id.phone);
+
         Button loginButton = (Button)rootView.findViewById(R.id.login_button);
 
         loginButton.setOnClickListener(new View.OnClickListener()
