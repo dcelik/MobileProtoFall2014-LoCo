@@ -164,5 +164,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
     public void onProviderDisabled(String s) {
     }
 
+    public String getUrl(String latlng, String key){
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
+        return url;
+    }
+
 
 }
