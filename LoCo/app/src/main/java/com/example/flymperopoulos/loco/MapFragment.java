@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +29,15 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mapfragment_my, container, false);
+
+        Button backBtn = (Button)rootView.findViewById(R.id.backMap);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyActivity activity = (MyActivity)getActivity();
+                activity.changeToMainFragment();
+            }
+        });
 
         mapView = ((MapView) rootView.findViewById(R.id.map));
         mapView.onCreate(savedInstanceState);

@@ -4,14 +4,22 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@android:id/text1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"/>
+    <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:id="@+id/text1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:clickable="true"/>-->
+
+    <Button
+        android:id="@+id/back"
+        android:text="Back"
+        android:textSize="20dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@android:id/list"
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

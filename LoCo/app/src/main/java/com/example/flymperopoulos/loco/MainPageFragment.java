@@ -78,10 +78,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        String url = "https://maps.googleapis.com/maps/api/geocode/";
+        String latlng = "latlng=42.292657,-71.263114";
 
         String key = "AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
-        String url1 = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&latlng=40.714224,-73.961452&key=" + key;
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
 
         latituteField = (TextView) rootView.findViewById(R.id.lat);
         longitudeField = (TextView) rootView.findViewById(R.id.longi);
@@ -99,18 +99,25 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         final TextView display = (TextView)rootView.findViewById(R.id.display);
 
+        Button changeToContact = (Button) rootView.findViewById(R.id.displaycontact);
+        changeToContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyActivity activity = (MyActivity)getActivity();
+                activity.changeToContact();
+            }
+        });
 
 // Request a string response from the provided URL.
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url1, null,
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i(response.toString(), "What is in the json\n\n\n\n");
                         try {
-                            String stuff = response.getJSONArray("results").get(1).toString();
+                            String stuff = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
 //                            String address = response.get("result").toString();
                             Log.d(stuff, "What is in the json\n\n\n\n");
-//                            display.setText(stuff);
+                            display.setText(stuff);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -152,12 +159,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
     @Override
     public void onProviderEnabled(String s) {
 //        Toast.makeText(this, "Enable"+ provider, Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
     public void onProviderDisabled(String s) {
-
     }
 
 
