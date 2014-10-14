@@ -19,11 +19,24 @@
         android:layout_centerVertical="true"
         android:layout_width="120dp"
         android:layout_height="wrap_content" />
+
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/phone"
         android:layout_above="@id/login_button"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_above="@id/phone"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+
+
+
 
 </RelativeLayout>
