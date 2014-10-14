@@ -54,7 +54,8 @@ public class ContactsFragment extends Fragment{
             }
         });
 
-        list= new PhoneContactInfoAdapter(getActivity(), R.layout.contact_item, readContacts());
+        ArrayList<PhoneContactInfo> contacts = readContacts();
+        list= new PhoneContactInfoAdapter(getActivity(), R.layout.contact_item, contacts);
         ListView lv=(ListView) rootView.findViewById(R.id.list);
         lv.setAdapter(list);
 
