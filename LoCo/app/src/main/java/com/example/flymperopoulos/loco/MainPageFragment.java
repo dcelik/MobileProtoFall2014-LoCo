@@ -88,7 +88,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
             }
         });
 
-        loadDatabaselist();
+//        loadDatabaselist();
 //        Log.v(listUsers.get(1).toString(), "this");
 
 
@@ -154,18 +154,18 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
 //      GETTING THE CONTACTS
 
-        ArrayList<PhoneContactInfo> contacts = readContacts();
-        PhoneContactInfoAdapter contactInfoAdapter= new PhoneContactInfoAdapter(getActivity(), R.layout.contact_item, contacts);
+        ArrayList<User> contacts = readContacts();
+        UserAdapter contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, contacts);
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
 
         return rootView;
     }
 
-    public ArrayList<PhoneContactInfo> readContacts() {
+    public ArrayList<User> readContacts() {
         Log.d("START", "Getting all Contacts");
-        ArrayList<PhoneContactInfo> arrContacts = new ArrayList<PhoneContactInfo>();
-        PhoneContactInfo phoneContactInfo=null;
+        ArrayList<User> arrContacts = new ArrayList<User>();
+        User user =null;
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         Cursor cursor = context.getContentResolver().query(uri,
                 new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER,
@@ -178,18 +178,15 @@ public class MainPageFragment extends Fragment implements LocationListener{
         {
             String contactNumber= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             String contactName =  cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            int phoneContactID = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone._ID));
 
-
-            phoneContactInfo = new PhoneContactInfo();
-            phoneContactInfo.setPhoneContactID(phoneContactID);
-            phoneContactInfo.setContactName(contactName);
-            phoneContactInfo.setContactNumber(contactNumber);
-            if (phoneContactInfo != null)
+            user = new User();
+            user.setName(contactName);
+            user.setPhoneNumber(contactNumber);
+            if (user != null)
             {
-                arrContacts.add(phoneContactInfo);
+                arrContacts.add(user);
             }
-            phoneContactInfo = null;
+            user = null;
             cursor.moveToNext();
         }
         cursor.close();
