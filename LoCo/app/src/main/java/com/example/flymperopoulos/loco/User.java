@@ -1,11 +1,15 @@
 package com.example.flymperopoulos.loco;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by dcelik on 10/10/14.
  */
 public class User {
     String username, phonenumber;
     Double latitude, longitude;
+    ArrayList<String> flag;
 
     public User(){}
 
@@ -15,6 +19,7 @@ public class User {
         this.phonenumber = num;
         this.latitude = lat;
         this.longitude = lon;
+        this.flag = new ArrayList<String>();
     }
 
     /**
@@ -29,6 +34,8 @@ public class User {
     public Double getLatitude() {return this.latitude;}
 
     public Double getLongitude() {return this.longitude;}
+
+    public ArrayList<String> getFlag() {return this.flag;}
 
     /**
      * Set Fields
@@ -47,6 +54,14 @@ public class User {
 
     public void setLongitude(Double value){
         this.longitude = value;
+    }
+
+    public void setFlag(ArrayList<String> list) {
+        this.flag = list;
+    }
+
+    public void addToFlag(String s){
+        this.flag.add(s);
     }
 
     /**

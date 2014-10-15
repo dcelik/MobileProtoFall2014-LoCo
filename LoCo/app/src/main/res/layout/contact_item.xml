@@ -15,16 +15,17 @@
             android:layout_marginTop="5dp"
             android:fontFamily="sans-serif-light"
             android:text="James"
+            android:layout_centerHorizontal="true"
             android:textSize="20sp"/>
-        <TextView
-            android:id="@+id/contact_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/profile_name"
-            android:layout_marginTop ="5dp"
-            android:textSize = "20sp"
-            android:text="Telephone No."
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/contact_number"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toRightOf="@id/profile_name"-->
+            <!--android:layout_marginTop ="5dp"-->
+            <!--android:textSize = "20sp"-->
+            <!--android:text="Telephone No."-->
+            <!--/>-->
     </RelativeLayout>
 
 </LinearLayout>

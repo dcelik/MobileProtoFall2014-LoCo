@@ -41,7 +41,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 
         //TextViews
         holder.name = (TextView) view.findViewById(R.id.profile_name);
-        holder.body = (TextView) view.findViewById(R.id.contact_number);
+//        holder.body = (TextView) view.findViewById(R.id.contact_number);
 
         fillViews(holder, Users.get(position));
         return view;
@@ -58,7 +58,7 @@ public class UserAdapter extends ArrayAdapter<User> {
 
     private void fillViews(UserHolder holder, User user){
         holder.name.setText(user.getName());
-        holder.body.setText(user.getPhoneNumber());
+//        holder.body.setText(user.getPhoneNumber());
     }
 
 

@@ -1,8 +1,10 @@
 package com.example.flymperopoulos.loco;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.location.Criteria;
 import android.location.Location;
@@ -15,8 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -57,7 +61,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
     HandlerDatabase db;
     User currentUser;
     public MainPageFragment(){
-
     }
 
     @Override
@@ -76,11 +79,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
         fb = ((MyActivity)getActivity()).fb;
 
         ArrayList<String> list = new ArrayList<String>();
-        list.add("hi");
-        list.add("stuff");
-        ArrayAdapter<String> requestAdapter = new ArrayAdapter<String>(getActivity(), R.layout.request_my, R.id.row, list);
+        final ArrayAdapter<String> requestAdapter = new ArrayAdapter<String>(getActivity(), R.layout.request_my, R.id.row, list);
         requestListview.setAdapter(requestAdapter);
-// Instantiate the RequestQueue.
+
+
 
         Button changetomap = (Button) rootView.findViewById(R.id.changtomap);
         changetomap.setOnClickListener(new View.OnClickListener() {
@@ -90,8 +92,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 activity.changeToMap();
             }
         });
-//        Log.v(listUsers.get(1).toString(), "this");
-
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
@@ -120,15 +120,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         final TextView display = (TextView)rootView.findViewById(R.id.display);
 
-//        Button changeToContact = (Button) rootView.findViewById(R.id.displaycontact);
-//        changeToContact.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MyActivity activity = (MyActivity)getActivity();
-//                activity.changeToContact();
-//            }
-//        });
-
 // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -153,17 +144,58 @@ public class MainPageFragment extends Fragment implements LocationListener{
         });
         queue.add(jsonRequest);
 
-
 //      GETTING THE CONTACTS
 
         ArrayList<User> mutualContacts = compareDatabaselist(readContacts());
-        UserAdapter contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, mutualContacts);
+        final UserAdapter contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, mutualContacts);
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
 
+        contactListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setTitle("Send a Request?");
+                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        final User requestUser = contactInfoAdapter.getItem(i);
+                        currentUser.addToFlag(requestUser.getPhoneNumber());
+                        fb.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Boolean found = false;
+                                for (DataSnapshot child : dataSnapshot.getChildren()){
+                                    User grabbedUser = child.getValue(User.class);
+                                    if (grabbedUser.getPhoneNumber().equals(currentUser.getPhoneNumber())) {
+                                        fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
+                                System.out.println("The read failed: " + firebaseError.getMessage());
+                            }
+                        });
+                    }
+                })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
         
 
         return rootView;
+    }
+
+    public ArrayList<User> getRequests(){
+        return null;
     }
 
     public ArrayList<User> readContacts() {
@@ -172,10 +204,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
         User user =null;
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         Cursor cursor = context.getContentResolver().query(uri,
-                new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER,
-                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                        ContactsContract.CommonDataKinds.Phone._ID},
-                null, null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+                new String[] {ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Phone._ID},null, null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
 
         cursor.moveToFirst();
         while (cursor.isAfterLast() == false)
@@ -223,6 +253,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
             }
         });
         return sameUsers;
+    }
+
+    public String getAddress(){
+        return null;
     }
 
     @Override
