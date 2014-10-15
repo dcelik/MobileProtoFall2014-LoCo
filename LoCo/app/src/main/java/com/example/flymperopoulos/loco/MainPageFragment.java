@@ -178,7 +178,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         {
             String contactNumber= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             String contactName =  cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            contactNumber = contactName.replaceAll("[^[0-9]*$]", "");
+            contactNumber = contactNumber.replaceAll("[^[0-9]*$]", "");
             user = new User();
             user.setName(contactName);
             user.setPhoneNumber(contactNumber);
