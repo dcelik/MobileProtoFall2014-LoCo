@@ -30,11 +30,13 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -87,8 +89,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 activity.changeToMap();
             }
         });
-
-        loadDatabaselist();
 //        Log.v(listUsers.get(1).toString(), "this");
 
 
@@ -155,7 +155,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
 //      GETTING THE CONTACTS
 
         ArrayList<PhoneContactInfo> contacts = readContacts();
-        PhoneContactInfoAdapter contactInfoAdapter= new PhoneContactInfoAdapter(getActivity(), R.layout.contact_item, contacts);
+        ArrayList<User> mutualContacts = compareDatabaselist(contacts);
+        PhoneContactInfoAdapter contactInfoAdapter= new PhoneContactInfoAdapter(getActivity(), R.layout.contact_item, mutualContacts);
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
 
@@ -197,55 +198,27 @@ public class MainPageFragment extends Fragment implements LocationListener{
         Log.d("END","Got all Contacts");
         return arrContacts;
     }
-    public void loadDatabaselist() {
-
-        fb.addChildEventListener(new ChildEventListener() {
-            // Retrieve new posts as they are added to Firebase
+    public ArrayList<User> compareDatabaselist(final ArrayList<User> contacts) {
+        final ArrayList<User> sameUsers = new ArrayList<User>();
+        fb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
-                Map<String, User> newPost = (Map<String, User>) snapshot.getValue();
-                System.out.println(newPost);
-                System.out.println(newPost.get("name"));
-                System.out.println(newPost.get("phoneNumber"));
-                System.out.println(newPost.get("latitude"));
-                System.out.println(newPost.get("longitude"));
-
-                String userName = newPost.get("name").toString();
-                String userPhone = newPost.get("phoneNumber").toString();
-//                double lat = newPost.get("latitude").getLatitude();
-//                double longi = newPost.get("latitude").getLongitude();
-                double lat = Double.parseDouble(newPost.get("latitude").toString());
-                double longi = Double.parseDouble(newPost.get("latitude").toString());
-
-
-                User newUser = new User(userName, userPhone,lat,longi);
-                listUsers.add(newUser);
+            public void onDataChange(DataSnapshot snapshot) {
+                ArrayList<User> listUsers = new ArrayList<User>();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    listUsers.add(child.getValue(User.class));
+                }
+                for (User u : contacts) {
+                    if (listUsers.contains(u)) {
+                        sameUsers.add(u);
+                    }
+                }
             }
-
             @Override
-            public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
-                String title = (String) snapshot.child("title").getValue();
-                System.out.println("The updated post title is " + title);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot snapshot) {
-                String title = (String) snapshot.child("title").getValue();
-                System.out.println("The blog post titled " + title + " has been deleted");
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot snapshot, String f) {
-                String title = (String) snapshot.child("title").getValue();
-                System.out.println("The blog post titled " + title + " has been deleted");
-            }
-
-            @Override
-            public void onCancelled(FirebaseError error) {
-                System.out.println(error.getMessage());
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-
+        return sameUsers;
     }
 
     @Override
