@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -78,11 +79,73 @@ public class MainPageFragment extends Fragment implements LocationListener{
         db = ((MyActivity)getActivity()).db;
         fb = ((MyActivity)getActivity()).fb;
 
-        ArrayList<String> list = new ArrayList<String>();
-        final ArrayAdapter<String> requestAdapter = new ArrayAdapter<String>(getActivity(), R.layout.request_my, R.id.row, list);
+        final ArrayList<User> list = new ArrayList<User>();
+        final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, list);
+
         requestListview.setAdapter(requestAdapter);
+        fb.addChildEventListener(new ChildEventListener() {
+            // Retrieve new posts as they are added to Firebase
+            @Override
+            public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    User grabbedUser = child.getValue(User.class);
+                    if(grabbedUser.getPhoneNumber().equals(currentUser.getPhoneNumber())){
+                        for(User u : grabbedUser.getFlag()){
+                            list.add(u);
+                            requestAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
 
+            }
+            @Override
+            public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
+                String title = (String) snapshot.child("title").getValue();
+                System.out.println("The updated post title is " + title);
+            }
 
+            @Override
+            public void onChildRemoved(DataSnapshot snapshot) {
+                String title = (String) snapshot.child("title").getValue();
+                System.out.println("The blog post titled " + title + " has been deleted");
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot snapshot, String f) {
+                String title = (String) snapshot.child("title").getValue();
+                System.out.println("The blog post titled " + title + " has been deleted");
+            }
+
+            @Override
+            public void onCancelled(FirebaseError error) {
+                System.out.println(error.getMessage());
+            }
+        });
+
+        requestListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setTitle("Send your location?");
+                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        final User sendUser = requestAdapter.getItem(i);
+                        currentUser.removeFromFlag(sendUser);
+                        fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
+
+                    }
+                })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
 
         Button changetomap = (Button) rootView.findViewById(R.id.changtomap);
         changetomap.setOnClickListener(new View.OnClickListener() {
@@ -92,13 +155,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 activity.changeToMap();
             }
         });
-
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-
-        String latlng = "latlng=42.292657,-71.263114";
-
-        String key = "AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
 
         latituteField = (TextView) rootView.findViewById(R.id.lat);
         longitudeField = (TextView) rootView.findViewById(R.id.longi);
@@ -119,6 +175,12 @@ public class MainPageFragment extends Fragment implements LocationListener{
         }
 
         final TextView display = (TextView)rootView.findViewById(R.id.display);
+
+        String latlng = "latlng=42.292657,-71.263114";
+
+        String key = "AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
 
 // Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -161,17 +223,17 @@ public class MainPageFragment extends Fragment implements LocationListener{
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         final User requestUser = contactInfoAdapter.getItem(i);
-                        currentUser.addToFlag(requestUser.getPhoneNumber());
+                        currentUser.addToFlag(requestUser);
                         fb.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                Boolean found = false;
                                 for (DataSnapshot child : dataSnapshot.getChildren()){
                                     User grabbedUser = child.getValue(User.class);
-                                    if (grabbedUser.getPhoneNumber().equals(currentUser.getPhoneNumber())) {
-                                        fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
+                                    if (grabbedUser.getPhoneNumber().equals(requestUser.getPhoneNumber())) {
+                                        fb.child(requestUser.getPhoneNumber()).setValue(requestUser);
                                     }
                                 }
+                                Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
                             }
                             @Override
                             public void onCancelled(FirebaseError firebaseError) {

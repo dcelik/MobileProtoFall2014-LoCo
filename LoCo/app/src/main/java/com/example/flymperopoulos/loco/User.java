@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class User {
     String username, phonenumber;
     Double latitude, longitude;
-    ArrayList<String> flag;
+    ArrayList<User> flag;
 
     public User(){}
 
@@ -19,7 +19,7 @@ public class User {
         this.phonenumber = num;
         this.latitude = lat;
         this.longitude = lon;
-        this.flag = new ArrayList<String>();
+        this.flag = new ArrayList<User>();
     }
 
     /**
@@ -35,7 +35,7 @@ public class User {
 
     public Double getLongitude() {return this.longitude;}
 
-    public ArrayList<String> getFlag() {return this.flag;}
+    public ArrayList<User> getFlag() {return this.flag;}
 
     /**
      * Set Fields
@@ -56,13 +56,18 @@ public class User {
         this.longitude = value;
     }
 
-    public void setFlag(ArrayList<String> list) {
+    public void setFlag(ArrayList<User> list) {
         this.flag = list;
     }
 
-    public void addToFlag(String s){
-        this.flag.add(s);
+    public void addToFlag(User u){
+        this.flag.add(u);
     }
+
+    public void removeFromFlag(User u){
+        this.flag.remove(u);
+    }
+
 
     /**
      * Title Case Method
