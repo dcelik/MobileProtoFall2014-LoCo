@@ -160,6 +160,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
 
+        
+
         return rootView;
     }
 
@@ -182,6 +184,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
             contactNumber = contactNumber.replaceAll("[^[0-9]*$]", "");
             if(contactNumber.length()>10){
                 contactNumber = contactNumber.substring(1);
+                Log.d("Number", contactNumber.toString());
             }
             user = new User();
             user.setName(contactName);
@@ -200,8 +203,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
     }
     public ArrayList<User> compareDatabaselist(final ArrayList<User> contacts) {
         final ArrayList<User> sameUsers = new ArrayList<User>();
-        Query userquery = fb;
-        userquery.addListenerForSingleValueEvent(new ValueEventListener() {
+        fb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 ArrayList<String> listUsers = new ArrayList<String>();
