@@ -48,15 +48,11 @@ public class MainPageFragment extends Fragment implements LocationListener{
     private Context context;
     private TextView latituteField;
     private TextView longitudeField;
-<<<<<<< HEAD
     ArrayList<User> listUsers;
 
     Firebase fb;
     HandlerDatabase db;
-
-=======
     User currentUser;
->>>>>>> 836a790a38278abd777c80ff0ae700d984b8c933
     public MainPageFragment(){
 
     }
@@ -105,12 +101,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         latituteField = (TextView) rootView.findViewById(R.id.lat);
         longitudeField = (TextView) rootView.findViewById(R.id.longi);
-<<<<<<< HEAD
-
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-=======
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
->>>>>>> 836a790a38278abd777c80ff0ae700d984b8c933
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);
         final Location location = locationManager.getLastKnownLocation(provider);
