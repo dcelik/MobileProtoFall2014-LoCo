@@ -178,7 +178,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         {
             String contactNumber= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             String contactName =  cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-
+            contactNumber = contactName.replaceAll("[^[0-9]*$]", "");
             user = new User();
             user.setName(contactName);
             user.setPhoneNumber(contactNumber);
@@ -199,12 +199,12 @@ public class MainPageFragment extends Fragment implements LocationListener{
         fb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                ArrayList<User> listUsers = new ArrayList<User>();
+                ArrayList<String> listUsers = new ArrayList<String>();
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    listUsers.add(child.getValue(User.class));
+                    listUsers.add(child.getValue(User.class).getPhoneNumber());
                 }
                 for (User u : contacts) {
-                    if (listUsers.contains(u)) {
+                    if (listUsers.contains(u.getPhoneNumber())) {
                         sameUsers.add(u);
                     }
                 }
