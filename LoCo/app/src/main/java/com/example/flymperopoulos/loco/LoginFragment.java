@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -35,6 +36,11 @@ public class LoginFragment extends Fragment {
     HandlerDatabase db;
     User currentUser;
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,6 +58,17 @@ public class LoginFragment extends Fragment {
         {
             @Override
             public void onClick(View view) {
+                if (userName.getText().toString().isEmpty() && userPhone.getText().toString().isEmpty()){
+                    Toast.makeText(context, "Enter a valid username and phone number!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (userPhone.getText().toString().length()<10 || userName.getText().toString().isEmpty() ){
+                    Toast.makeText(context, "Enter a 10-digit number with no spaces or dashes", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(context, "Welcome, " + userName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
+
                 MyActivity activity = (MyActivity)getActivity();
                 final String username = userName.getText().toString();
                 final String phonenumber = userPhone.getText().toString();
@@ -88,8 +105,6 @@ public class LoginFragment extends Fragment {
                 activity.changeToMainPage();
             }
         });
-
         return rootView;
-
     }
 }
