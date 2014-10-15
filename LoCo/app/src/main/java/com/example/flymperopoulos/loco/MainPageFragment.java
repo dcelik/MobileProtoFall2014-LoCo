@@ -30,6 +30,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 
@@ -179,6 +180,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
             String contactNumber= cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             String contactName =  cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             contactNumber = contactNumber.replaceAll("[^[0-9]*$]", "");
+            if(contactNumber.length()>10){
+                contactNumber = contactNumber.substring(1);
+            }
             user = new User();
             user.setName(contactName);
             user.setPhoneNumber(contactNumber);
@@ -196,7 +200,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
     }
     public ArrayList<User> compareDatabaselist(final ArrayList<User> contacts) {
         final ArrayList<User> sameUsers = new ArrayList<User>();
-        fb.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query userquery = fb;
+        userquery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 ArrayList<String> listUsers = new ArrayList<String>();
