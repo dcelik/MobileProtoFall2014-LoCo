@@ -14,56 +14,56 @@ import java.util.List;
 /**
  * Created by james on 10/14/14.
  */
-public class PhoneContactInfoAdapter extends ArrayAdapter<PhoneContactInfo> {
-    private List<PhoneContactInfo> phoneContactInfos = new ArrayList<PhoneContactInfo>();
+public class UserAdapter extends ArrayAdapter<User> {
+    private List<User> Users = new ArrayList<User>();
     private int resource;
     private Context context;
 
 
-    public PhoneContactInfoAdapter(Context context, int resource, List<PhoneContactInfo> objects) {
+    public UserAdapter(Context context, int resource, List<User> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
-        this.phoneContactInfos = objects;
+        this.Users = objects;
 
     }
 
-    private class PhoneContactInfoHolder {
+    private class UserHolder {
         TextView name, body;
     }
 
     @Override
     public View getView(int position, View view, ViewGroup parent){
-        PhoneContactInfoHolder holder;
+        UserHolder holder;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(resource, parent, false);
-        holder = new PhoneContactInfoHolder();
+        holder = new UserHolder();
 
         //TextViews
         holder.name = (TextView) view.findViewById(R.id.profile_name);
         holder.body = (TextView) view.findViewById(R.id.contact_number);
 
-        fillViews(holder, phoneContactInfos.get(position));
+        fillViews(holder, Users.get(position));
         return view;
     }
     @Override
     public int getCount(){
-        return this.phoneContactInfos.size();
+        return this.Users.size();
     }
 
     @Override
-    public PhoneContactInfo getItem(int position) {
-        return this.phoneContactInfos.get(position);
+    public User getItem(int position) {
+        return this.Users.get(position);
     }
 
-    private void fillViews(PhoneContactInfoHolder holder, PhoneContactInfo phoneContactInfo){
-        holder.name.setText(phoneContactInfo.name);
-        holder.body.setText(phoneContactInfo.number);
+    private void fillViews(UserHolder holder, User user){
+        holder.name.setText(user.getName());
+        holder.body.setText(user.getPhoneNumber());
     }
 
 
-    public void addPhoneContactInfo(PhoneContactInfo PhoneContactInfo){
-        this.phoneContactInfos.add(PhoneContactInfo);
+    public void addUser(User user){
+        this.Users.add(user);
         notifyDataSetChanged();
     }
 }

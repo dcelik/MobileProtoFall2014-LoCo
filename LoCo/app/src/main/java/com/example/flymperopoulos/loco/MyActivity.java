@@ -69,14 +69,6 @@ public class MyActivity extends Activity {
         transaction.replace(R.id.container, fragment);
         transaction.commit();
     }
-    public void changeToContact(){
-        ContactsFragment fragment = new ContactsFragment ();
-
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.commit();
-    }
     public void goBack()
     {
         FragmentManager fm = getFragmentManager();
