@@ -71,19 +71,19 @@
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="250dp"></ListView>
 
     <Button
         android:id= "@+id/changtomap"
         android:layout_width="120dp"
         android:text="Map"
-        android:layout_below="@id/contacts"
+        android:layout_below="@id/contacts_list"
         android:layout_height="wrap_content" />
-    <Button
-        android:id= "@+id/displaycontact"
-        android:layout_width="120dp"
-        android:text="Contacts"
-        android:layout_below="@id/changtomap"
-        android:layout_height="wrap_content" />
+    <!--<Button-->
+        <!--android:id= "@+id/displaycontact"-->
+        <!--android:layout_width="120dp"-->
+        <!--android:text="Contacts"-->
+        <!--android:layout_below="@id/changtomap"-->
+        <!--android:layout_height="wrap_content" />-->
 
 </RelativeLayout>

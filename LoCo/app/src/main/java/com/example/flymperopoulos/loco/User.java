@@ -7,6 +7,8 @@ public class User {
     String username, phonenumber;
     Double latitude, longitude;
 
+    public User(){}
+
     //Public Constructor to create a user
     public User(String name, String num, Double lat, Double lon){
         this.username = name;
@@ -39,7 +41,7 @@ public class User {
         this.phonenumber = toTitleCase(value);
     }
 
-    public void setlatitude(Double value){
+    public void setLatitude(Double value){
         this.latitude = value;
     }
 

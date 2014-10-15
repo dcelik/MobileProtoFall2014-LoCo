@@ -15,6 +15,7 @@ public class MyActivity extends Activity {
 
     HandlerDatabase db;
     Firebase fb;
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class MyActivity extends Activity {
         }
         db = new HandlerDatabase(this);
         fb = new Firebase("https://scorching-fire-1825.firebaseio.com/Users");
+        currentUser = new User(null,null,0.0,0.0);
         db.open();
     }
 
@@ -61,14 +63,6 @@ public class MyActivity extends Activity {
 
     public void changeToMap(){
         MapFragment fragment = new MapFragment();
-
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.commit();
-    }
-    public void changeToContact(){
-        ContactsFragment fragment = new ContactsFragment ();
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
