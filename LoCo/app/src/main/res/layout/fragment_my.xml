@@ -10,7 +10,6 @@
     android:background="#FF9494"
     >
 
-
     <EditText
         android:id="@+id/username"
         android:layout_centerHorizontal="true"
@@ -21,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
         />
-
 
     <EditText
         android:id="@+id/phone"
@@ -47,7 +45,6 @@
         android:layout_height="wrap_content"
         />
 
-
     <ImageView
         android:id="@+id/imageLabel"
         android:layout_width="wrap_content"
@@ -57,5 +54,4 @@
         android:src="@drawable/iclogo"
         android:layout_marginBottom="30dp"
         />
-
 </RelativeLayout>
