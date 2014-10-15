@@ -11,20 +11,21 @@
     >
 
 
-
-    <Button
-        android:id="@+id/login_button"
-        android:text = "Sign Up"
+    <EditText
+        android:id="@+id/username"
         android:layout_centerHorizontal="true"
+        android:layout_width="140dp"
+        android:gravity="center"
         android:layout_centerVertical="true"
-        android:layout_width="120dp"
-        android:background="@drawable/mybutton"
+        android:hint="Username"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
         />
+
 
     <EditText
         android:id="@+id/phone"
-        android:layout_above="@id/login_button"
+        android:layout_below="@id/username"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:maxLength="10"
@@ -35,16 +36,17 @@
         android:inputType="number"
         />
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_above="@id/phone"
+    <Button
+        android:id="@+id/login_button"
+        android:layout_below="@+id/phone"
+        android:text = "Sign Up"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:gravity="center"
-        android:hint="Username"
+        android:layout_width="120dp"
+        android:background="@drawable/mybutton"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
         />
+
 
     <ImageView
         android:id="@+id/imageLabel"

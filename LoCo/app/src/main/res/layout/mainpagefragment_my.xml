@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#FF9494">
 
 
-    <TextView
-        android:id="@+id/display1"
-        android:text="Current Location:"
-        android:layout_width="wrap_content"
-        android:textSize="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_height="wrap_content" />
     <TextView
         android:id="@+id/display"
-        android:text="Address"
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="15dip"
+        android:layout_width="fill_parent"
         android:textSize="20dp"
-        android:layout_toRightOf="@id/display1"
+        android:gravity="center"
+        android:background="@drawable/mybutton"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content" />
     <TextView
@@ -41,12 +34,15 @@
         android:textSize="20dip" />
     <TextView
         android:id="@+id/location_request"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="30dp"
+        android:gravity="center"
+        android:background="@drawable/mybutton"
         android:text="Location Requests"
         android:layout_below="@id/longi"
         android:layout_centerHorizontal="true" />
+
     <ListView
         android:id="@+id/requests"
         android:layout_below="@id/location_request"
@@ -57,9 +53,11 @@
 
     <TextView
         android:id="@+id/contacts"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Contacts"
+        android:gravity="center"
+        android:background="@drawable/mybutton"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/requests"
         android:textSize="30dp"
@@ -75,15 +73,14 @@
 
     <Button
         android:id= "@+id/changtomap"
-        android:layout_width="120dp"
+        android:layout_width="fill_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:text="Map"
+        android:background="@drawable/mybutton"
+
         android:layout_below="@id/contacts_list"
         android:layout_height="wrap_content" />
-    <!--<Button-->
-        <!--android:id= "@+id/displaycontact"-->
-        <!--android:layout_width="120dp"-->
-        <!--android:text="Contacts"-->
-        <!--android:layout_below="@id/changtomap"-->
-        <!--android:layout_height="wrap_content" />-->
+
 
 </RelativeLayout>
