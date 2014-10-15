@@ -40,7 +40,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
     private Context context;
     private TextView latituteField;
     private TextView longitudeField;
+    User currentUser;
     public MainPageFragment(){
+
     }
 
     @Override
@@ -52,6 +54,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mainpagefragment_my, container, false);
+        currentUser = ((MyActivity)getActivity()).currentUser;
 
         ListView requestListview = (ListView)rootView.findViewById(R.id.requests);
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
@@ -80,16 +83,19 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         latituteField = (TextView) rootView.findViewById(R.id.lat);
         longitudeField = (TextView) rootView.findViewById(R.id.longi);
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);
         final Location location = locationManager.getLastKnownLocation(provider);
         locationManager.requestLocationUpdates(provider, 0, 0 , this);
         if (location != null) {
             onLocationChanged(location);
-        } else {
+        } else if(currentUser.getLongitude()==null && currentUser.getLatitude()==null){
             latituteField.setText("Location not available");
             longitudeField.setText("Location not available");
+        } else {
+            latituteField.setText(String.valueOf(currentUser.getLatitude()));
+            longitudeField.setText(String.valueOf(currentUser.getLongitude()));
         }
 
         final TextView display = (TextView)rootView.findViewById(R.id.display);
@@ -111,7 +117,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         try {
                             String stuff = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
 //                            String address = response.get("result").toString();
-                            Log.d(stuff, "What is in the json\n\n\n\n");
+                            //Log.d(stuff, "What is in the json\n\n\n\n");
                             display.setText(stuff);
 
                         } catch (JSONException e) {
@@ -141,8 +147,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
     public void onLocationChanged(Location location) {
         double lat = (location.getLatitude());
         double lng = (location.getLongitude());
-        latituteField.setText(String.valueOf(lat));
-        longitudeField.setText(String.valueOf(lng));
+        currentUser.setLatitude(lat);
+        currentUser.setLongitude((lng));
+        latituteField.setText(String.valueOf(currentUser.getLatitude()));
+        longitudeField.setText(String.valueOf(currentUser.getLongitude()));
     }
 
     @Override
