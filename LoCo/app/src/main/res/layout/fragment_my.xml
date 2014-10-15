@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MyActivity$PlaceholderFragment"
-    android:background="#F2FF17"
+    android:background="#FF9494"
     >
 
     <Button
@@ -16,8 +16,9 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_width="120dp"
-        android:background="#00ABFF"
+        android:background="@drawable/mybutton"
         android:layout_height="wrap_content"
+
         />
 
     <EditText
@@ -28,7 +29,9 @@
         android:maxLength="10"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:hint="Phone Number" />
+        android:hint="Phone Number"
+
+        />
 
     <EditText
         android:id="@+id/username"
