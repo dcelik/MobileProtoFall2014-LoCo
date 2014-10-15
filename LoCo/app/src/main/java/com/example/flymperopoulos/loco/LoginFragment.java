@@ -40,6 +40,5 @@ public class LoginFragment extends Fragment {
 
         return rootView;
 
-
     }
 }

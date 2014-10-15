@@ -18,7 +18,6 @@
         android:layout_width="120dp"
         android:background="@drawable/mybutton"
         android:layout_height="wrap_content"
-
         />
 
     <EditText
