@@ -18,6 +18,7 @@ public class MyActivity extends Activity {
     Firebase fb;
     User currentUser;
     ArrayList<User> mutualContacts;
+    ArrayList<User> requestContacts;
     ArrayList<User> contactLocations;
 
     @Override
@@ -34,6 +35,7 @@ public class MyActivity extends Activity {
         currentUser = new User(null,null,0.0,0.0);
         mutualContacts = new ArrayList<User>();
         contactLocations = new ArrayList<User>();
+        requestContacts = new ArrayList<User>();
         db.open();
     }
 

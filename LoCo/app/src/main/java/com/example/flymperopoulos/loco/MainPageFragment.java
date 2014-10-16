@@ -53,6 +53,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
     private TextView longitudeField;
     UserAdapter contactInfoAdapter;
     ArrayList<User> mutualContacts;
+    ArrayList<User> requestContacts;
 
     Firebase fb;
     HandlerDatabase db;
@@ -74,9 +75,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
         ListView requestListview = (ListView)rootView.findViewById(R.id.requests);
         db = ((MyActivity)getActivity()).db;
         fb = ((MyActivity)getActivity()).fb;
-
-        final ArrayList<String> list = new ArrayList<String>();
-        final ArrayAdapter requestAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+        mutualContacts = ((MyActivity)getActivity()).mutualContacts;
+        requestContacts = ((MyActivity)getActivity()).requestContacts;
+        final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, requestContacts);
 //        final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, list);
 
         mutualContacts = ((MyActivity)getActivity()).mutualContacts;
@@ -84,14 +85,32 @@ public class MainPageFragment extends Fragment implements LocationListener{
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
 
         requestListview.setAdapter(requestAdapter);
+        fb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                requestContacts.clear();
+                if(dataSnapshot!=null) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if(child.getName().equals(currentUser.getPhoneNumber())) {
+                            ArrayList<String> flags = child.getValue(User.class).getFlag();
+                            for(String s: flags){
+                                requestContacts.add(dataSnapshot.child(s).getValue(User.class));
+                            }
+                            requestAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
         fb.child(currentUser.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                list.clear();
-                ArrayList<String> temp = dataSnapshot.getValue(User.class).getFlag();
 
-                list.addAll(dataSnapshot.getValue(User.class).getFlag());
-                requestAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -109,7 +128,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                        final String sendUser = requestAdapter.getItem(i).toString();
+                        final String sendUser = requestAdapter.getItem(i).getPhoneNumber();
                         currentUser.removeFromFlag(sendUser);
                         fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
 
@@ -259,6 +278,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         fb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                mutualContacts.clear();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     for (User u : contacts) {
                         if (child.getValue(User.class).getPhoneNumber().equals(u.getPhoneNumber())) {

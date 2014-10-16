@@ -96,18 +96,20 @@ public class LoginFragment extends Fragment{
                 fb.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            if (child.getName().equals(phonenumber)) {
-                                User grabbedUser = child.getValue(User.class);
-                                currentUser.setFlag(grabbedUser.getFlag());
-                                fb.child(phonenumber).setValue(currentUser);
-                                activity.changeToMainPage();
-                                return;
-                            }
+                        if(dataSnapshot!=null) {
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                if (child.getName().equals(phonenumber)) {
+                                    User grabbedUser = child.getValue(User.class);
+                                    currentUser.setFlag(grabbedUser.getFlag());
+                                    fb.child(phonenumber).setValue(currentUser);
+                                    activity.changeToMainPage();
+                                    return;
+                                }
 
+                            }
+                            fb.child(phonenumber).setValue(currentUser);
+                            activity.changeToMainPage();
                         }
-                        fb.child(phonenumber).setValue(currentUser);
-                        activity.changeToMainPage();
                     }
 
                     @Override
