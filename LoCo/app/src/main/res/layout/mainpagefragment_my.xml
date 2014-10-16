@@ -5,21 +5,33 @@
     android:background="#FF9494">
 
 
+    <ImageView
+        android:id="@+id/youAt"
+        android:src="@drawable/loco"
+        android:layout_above="@+id/lat"
+        android:background="#00ffff"
+        android:layout_marginTop="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp" />
+
     <TextView
         android:id="@+id/display"
         android:layout_width="fill_parent"
-        android:textSize="20dp"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:layout_toRightOf="@+id/youAt"
         android:gravity="center"
-        android:background="@drawable/mybutton"
+        android:background="#00ffff"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/lat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dip"
-
         android:layout_below="@id/display"
+        android:textColor="#FFFFFF"
         android:text="Latitude: "
         android:textSize="20dip" >
     </TextView>
@@ -30,38 +42,69 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dip"
         android:layout_below="@id/lat"
+        android:textColor="#FFFFFF"
         android:text="Longitude"
         android:textSize="20dip" />
+
+    <ImageView
+        android:id="@+id/locationRequests"
+        android:layout_below="@+id/longi"
+        android:src="@drawable/connect"
+        android:background="#00ffff"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp" />
+
     <TextView
         android:id="@+id/location_request"
+        android:background="#00ffff"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
         android:gravity="center"
-        android:background="@drawable/mybutton"
-        android:text="Location Requests"
+        android:textSize="40sp"
+       android:layout_toRightOf="@+id/locationRequests"
+        android:layout_toEndOf="@+id/locationRequests"
+        android:text="@string/location_Requests"
+        android:textColor="#FFFFFF"
         android:layout_below="@id/longi"
         android:layout_centerHorizontal="true" />
+
 
     <ListView
         android:id="@+id/requests"
         android:layout_below="@id/location_request"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
+        android:textColor="#FFFFFF"
         android:gravity="center_horizontal"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content">
+    </ListView>
+
+
+    <ImageView
+        android:id="@+id/contactsExisting"
+        android:layout_below="@+id/requests"
+        android:src="@drawable/people"
+        android:background="#00ffff"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp" />
 
     <TextView
         android:id="@+id/contacts"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Contacts"
+        android:text="@string/contacts"
+        android:background="#00ffff"
+        android:textColor="#FFFFFF"
+        android:layout_toEndOf="@+id/contactsExisting"
+        android:layout_toRightOf="@+id/contactsExisting"
         android:gravity="center"
-        android:background="@drawable/mybutton"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/requests"
-        android:textSize="30dp"
+        android:textSize="40sp"
         />
+
 
     <ListView
         android:id="@+id/contacts_list"
@@ -69,17 +112,33 @@
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_height="250dp"></ListView>
+        android:layout_marginBottom="10dp"
+        android:layout_height="250dp">
+
+        </ListView>
+
+    <ImageView
+        android:id="@+id/mapView"
+        android:src="@drawable/map"
+        android:background="#00ffff"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_height="53dp"
+    />
 
     <Button
         android:id= "@+id/changtomap"
         android:layout_width="fill_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Map"
-        android:background="@drawable/mybutton"
-
-        android:layout_below="@id/contacts_list"
+        android:text="@string/map"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textSize="40sp"
+        android:layout_toRightOf="@id/mapView"
+        android:layout_toEndOf="@+id/mapView"
+        android:background="@drawable/mapbutton"
+        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content" />
 
 

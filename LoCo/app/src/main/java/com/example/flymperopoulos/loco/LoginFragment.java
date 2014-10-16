@@ -54,12 +54,12 @@ public class LoginFragment extends Fragment {
         {
             @Override
             public void onClick(View view) {
-                if (userName.getText().toString().isEmpty() && userPhone.getText().toString().isEmpty()){
-                    Toast.makeText(context, "Enter a valid username and phone number!", Toast.LENGTH_SHORT).show();
+                if (userName.getText().toString().isEmpty() || userPhone.getText().toString().isEmpty()){
+                    Toast.makeText(context, "Enter a valid username or phone number!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (userPhone.getText().toString().length()<10 || userName.getText().toString().isEmpty() ){
+                if (userPhone.getText().toString().length()<10){
                     Toast.makeText(context, "Enter a 10-digit number with no spaces or dashes", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -98,7 +98,6 @@ public class LoginFragment extends Fragment {
                         Log.i("DebugDebug", "The read failed: " + firebaseError.getMessage());
                     }
                 });
-
             }
         });
         return rootView;
