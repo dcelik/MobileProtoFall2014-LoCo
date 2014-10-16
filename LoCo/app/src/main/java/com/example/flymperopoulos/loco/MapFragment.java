@@ -16,6 +16,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 /**
  * Created by james on 10/10/14.
  */
@@ -23,6 +25,8 @@ public class MapFragment extends Fragment {
 
     GoogleMap map;
     MapView mapView;
+    ArrayList<User> contactLocations;
+    User currentUser;
 
     public MapFragment(){}
 
@@ -30,11 +34,14 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mapfragment_my, container, false);
 
+        contactLocations = ((MyActivity)getActivity()).contactLocations;
+        currentUser = ((MyActivity)getActivity()).currentUser;
+
         Button backBtn = (Button)rootView.findViewById(R.id.backMap);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyActivity activity = (MyActivity)getActivity();
+                MyActivity activity = (MyActivity) getActivity();
                 activity.changeToMainFragment();
             }
         });
@@ -55,14 +62,23 @@ public class MapFragment extends Fragment {
     }
 
     private void setupMap() {
-        LatLng olin = new LatLng(42.29311, -71.262547);
         map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(olin, 0));
+        LatLng userLocation = new LatLng(currentUser.getLatitude(), currentUser.getLongitude());
 
-        Marker college = map.addMarker(new MarkerOptions()
-                .title("Olin College")
-                .snippet("The School")
-                .position(olin));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 0));
+
+        addMarker(contactLocations);
+
+    }
+
+    public void addMarker(ArrayList<User> userList){
+        for(User u: userList) {
+            LatLng latLng = new LatLng(u.getLatitude(), u.getLongitude());
+
+            Marker marker = map.addMarker(new MarkerOptions()
+                    .title(u.getName())
+                    .position(latLng));
+        }
     }
 
     @Override
