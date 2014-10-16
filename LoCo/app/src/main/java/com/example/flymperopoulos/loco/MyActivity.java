@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.firebase.client.Firebase;
 
+import java.util.ArrayList;
 
 
 public class MyActivity extends Activity {
@@ -16,6 +17,8 @@ public class MyActivity extends Activity {
     HandlerDatabase db;
     Firebase fb;
     User currentUser;
+    ArrayList<User> mutualContacts;
+    ArrayList<User> contactLocations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,8 @@ public class MyActivity extends Activity {
         db = new HandlerDatabase(this);
         fb = new Firebase("https://scorching-fire-1825.firebaseio.com/Users");
         currentUser = new User(null,null,0.0,0.0);
+        mutualContacts = new ArrayList<User>();
+        contactLocations = new ArrayList<User>();
         db.open();
     }
 

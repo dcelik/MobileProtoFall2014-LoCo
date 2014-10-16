@@ -3,7 +3,9 @@ package com.example.flymperopoulos.loco;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,17 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by james on 10/9/14.
@@ -74,22 +70,21 @@ public class LoginFragment extends Fragment {
                 final String phonenumber = userPhone.getText().toString();
                 currentUser.setName(username);
                 currentUser.setPhoneNumber(phonenumber);
-//                Query userquery = fb;
-//                Log.i("DebugDebug", phonenumber);
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                Criteria criteria = new Criteria();
+                String provider = locationManager.getBestProvider(criteria, false);
+                final Location location = locationManager.getLastKnownLocation(provider);
+                currentUser.setLatitude(location.getLatitude());
+                currentUser.setLongitude(location.getLongitude());
                 fb.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-//                        Log.i("DebugDebug", "Data Changed");
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                            Log.i("DebugDebug", child.getName());
                             if (child.getName().equals(phonenumber)) {
                                 User grabbedUser = child.getValue(User.class);
-                                currentUser.setLongitude(grabbedUser.getLongitude());
-                                currentUser.setLatitude(grabbedUser.getLatitude());
-                                currentUser.setName(grabbedUser.getName());
-
+                                currentUser.setFlag(grabbedUser.getFlag());
+                                fb.child(phonenumber).setValue(currentUser);
                                 activity.changeToMainPage();
-
                                 return;
                             }
 

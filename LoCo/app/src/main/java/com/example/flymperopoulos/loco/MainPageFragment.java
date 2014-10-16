@@ -41,6 +41,7 @@ import com.firebase.client.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,11 +54,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
     private LocationManager locationManager;
     private Context context;
-    private TextView latituteField;
+    private TextView latitudeField;
     private TextView longitudeField;
     UserAdapter contactInfoAdapter;
-    Map<String, User> mutualHashmap;
-
+    ArrayList<User> mutualContacts;
 
     Firebase fb;
     HandlerDatabase db;
@@ -84,15 +84,15 @@ public class MainPageFragment extends Fragment implements LocationListener{
         final ArrayAdapter requestAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
 //        final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, list);
 
-        mutualHashmap = new HashMap<String, User>();
+        mutualContacts = ((MyActivity)getActivity()).mutualContacts;
 
         requestListview.setAdapter(requestAdapter);
         fb.child(currentUser.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
-                ArrayList<String> temp  = dataSnapshot.getValue(User.class).getFlag();
-                
+                ArrayList<String> temp = dataSnapshot.getValue(User.class).getFlag();
+
                 list.addAll(dataSnapshot.getValue(User.class).getFlag());
                 requestAdapter.notifyDataSetChanged();
             }
@@ -137,7 +137,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
             }
         });
 
-        latituteField = (TextView) rootView.findViewById(R.id.lat);
+        latitudeField = (TextView) rootView.findViewById(R.id.lat);
         longitudeField = (TextView) rootView.findViewById(R.id.longi);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
@@ -148,10 +148,10 @@ public class MainPageFragment extends Fragment implements LocationListener{
         if (location != null) {
             onLocationChanged(location);
         } else if(currentUser.getLongitude()==null && currentUser.getLatitude()==null){
-            latituteField.setText("Location not available");
+            latitudeField.setText("Location not available");
             longitudeField.setText("Location not available");
         } else {
-            latituteField.setText(String.valueOf(currentUser.getLatitude()));
+            latitudeField.setText(String.valueOf(currentUser.getLatitude()));
             longitudeField.setText(String.valueOf(currentUser.getLongitude()));
         }
 
@@ -190,8 +190,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
 //      GETTING THE CONTACTS
 
         compareDatabaselist(readContacts());
-        //Log.d("mutual", mutualContacts.toString());
-        contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, new ArrayList<User>());
+        contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, mutualContacts);
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
 
@@ -204,44 +203,16 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                        final User requestUser = contactInfoAdapter.getItem(i);
+                        User requestUser = contactInfoAdapter.getItem(i);
                         requestUser.addToFlag(currentUser.getPhoneNumber());
 
+                        Log.d("user", requestUser.getFlag().toString());
+                        Log.d("user", requestUser.getLatitude().toString());
+                        Log.d("user", requestUser.getLongitude().toString());
+                        Log.d("user", requestUser.getPhoneNumber().toString());
                         fb.child(requestUser.getPhoneNumber()).setValue(requestUser);
+
                         Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
-//                        fb.child(requestUser.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
-//                            ArrayList<String> tempRequests = new ArrayList<String>();
-//
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-////                                tempRequests = dataSnapshot.getValue(User.class).getFlag();
-//                                dataSnapshot.getValue(User.class).getFlag().add(currentUser.getPhoneNumber());
-//
-//                                requestAdapter.notifyDataSetChanged();
-//
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(FirebaseError firebaseError) {
-//
-//                            }
-//                        });
-//                        fb.addListenerForSingleValueEvent(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                for (DataSnapshot child : dataSnapshot.getChildren()){
-//                                    User grabbedUser = child.getValue(User.class);
-//                                    if (grabbedUser.getPhoneNumber().equals(requestUser.getPhoneNumber())) {
-//                                        fb.child(requestUser.getPhoneNumber()).setValue(currentUser);
-//                                    }
-//                                }
-//                                Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
-//                            }
-//                            @Override
-//                            public void onCancelled(FirebaseError firebaseError) {
-//                                System.out.println("The read failed: " + firebaseError.getMessage());
-//                            }
-//                        });
                     }
                 })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -299,15 +270,11 @@ public class MainPageFragment extends Fragment implements LocationListener{
         fb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                ArrayList<String> listUsers = new ArrayList<String>();
                 for (DataSnapshot child : snapshot.getChildren()) {
-                    listUsers.add(child.getValue(User.class).getPhoneNumber());
-                }
-                for (User u : contacts) {
-                    mutualHashmap.put(u.getPhoneNumber(), u);
-                    if (listUsers.contains(u.getPhoneNumber())) {
-                        contactInfoAdapter.add(u);
-
+                    for (User u : contacts) {
+                        if (child.getValue(User.class).getPhoneNumber().equals(u.getPhoneNumber())) {
+                            mutualContacts.add(child.getValue(User.class));
+                        }
                     }
                 }
                 contactInfoAdapter.notifyDataSetChanged();
@@ -338,7 +305,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         double lng = (location.getLongitude());
         currentUser.setLatitude(lat);
         currentUser.setLongitude((lng));
-        latituteField.setText(String.valueOf(currentUser.getLatitude()));
+        latitudeField.setText(String.valueOf(currentUser.getLatitude()));
         longitudeField.setText(String.valueOf(currentUser.getLongitude()));
     }
 

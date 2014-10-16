@@ -1,7 +1,6 @@
 package com.example.flymperopoulos.loco;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -26,9 +25,7 @@ public class User implements Serializable {
     /**
      * Get Fields
      */
-    public String getName(){
-        return this.username;
-    }
+    public String getName(){ return this.username; }
 
     public String getPhoneNumber() { return this.phonenumber;}
 
