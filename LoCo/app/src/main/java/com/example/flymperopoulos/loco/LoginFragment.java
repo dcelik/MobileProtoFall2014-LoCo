@@ -101,6 +101,7 @@ public class LoginFragment extends Fragment{
                                 if (child.getName().equals(phonenumber)) {
                                     User grabbedUser = child.getValue(User.class);
                                     currentUser.setFlag(grabbedUser.getFlag());
+                                    currentUser.setRequestConfirmed(grabbedUser.getRequestConfirmed());
                                     fb.child(phonenumber).setValue(currentUser);
                                     activity.changeToMainPage();
                                     ((MyActivity) getActivity()).notificationStart();

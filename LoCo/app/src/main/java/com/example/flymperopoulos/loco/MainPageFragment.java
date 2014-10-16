@@ -30,6 +30,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -81,7 +82,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
         requestContacts = ((MyActivity)getActivity()).requestContacts;
         contactLocations = ((MyActivity)getActivity()).contactLocations;
         final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, requestContacts);
-//        final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, list);
 
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
 
@@ -109,6 +109,24 @@ public class MainPageFragment extends Fragment implements LocationListener{
             }
         });
 
+        fb.child(currentUser.getPhoneNumber()).child("requestConfirmed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    for(User u: mutualContacts){
+                        if(child.getValue(String.class).equals(u.getPhoneNumber())){
+                            contactLocations.add(u);
+
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
         requestListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
@@ -122,11 +140,15 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         currentUser.removeFromFlag(sendUser);
                         for(User u: mutualContacts){
                             if(currentUser.getPhoneNumber().equals(u.getPhoneNumber())){
-                               u.removeFromFlag(sendUser);
+                                u.removeFromFlag(sendUser);
                             }
                             contactInfoAdapter.notifyDataSetChanged();
                         }
                         fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
+                        ArrayList<String> temp = new ArrayList<String>();
+                        temp.add(currentUser.getPhoneNumber());
+
+                        fb.child(sendUser).child("requestConfirmed").setValue(temp);
 
                     }
                 })
@@ -173,6 +195,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         String key = "AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
         String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
+//        String place = getAddress(url);
+//        Log.d("Address", place);
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 //
@@ -230,6 +254,28 @@ public class MainPageFragment extends Fragment implements LocationListener{
         });
 
         return rootView;
+    }
+    public String getAddress(String url){
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            address = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        queue.add(jsonRequest);
+        return address;
     }
 
     public ArrayList<User> readContacts() {

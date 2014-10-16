@@ -16,7 +16,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by james on 10/10/14.
@@ -76,6 +78,7 @@ public class MapFragment extends Fragment {
             LatLng latLng = new LatLng(u.getLatitude(), u.getLongitude());
 
             Marker marker = map.addMarker(new MarkerOptions()
+                    .snippet(getTime(System.currentTimeMillis()))
                     .title(u.getName())
                     .position(latLng));
         }
@@ -97,6 +100,13 @@ public class MapFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+    }
+
+    public String getTime(long time) {
+        SimpleDateFormat adc = new SimpleDateFormat("MMM dd,yyyy HH:mm");
+
+        Date resultDate = new Date(time);
+        return adc.format(resultDate);
     }
 
 

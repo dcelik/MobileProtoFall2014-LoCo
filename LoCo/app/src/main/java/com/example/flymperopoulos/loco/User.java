@@ -10,6 +10,7 @@ public class User implements Serializable {
     String username, phonenumber;
     Double latitude, longitude;
     ArrayList<String> flag = new ArrayList<String>();
+    ArrayList<String> requestConfirmed = new ArrayList<String>();
 
     public User(){}
 
@@ -35,6 +36,8 @@ public class User implements Serializable {
 
     public ArrayList<String> getFlag() {return this.flag;}
 
+    public ArrayList<String> getRequestConfirmed() {return this.requestConfirmed;}
+
     /**
      * Set Fields
      */
@@ -57,6 +60,10 @@ public class User implements Serializable {
     public void setFlag(ArrayList<String> list) {
         this.flag = list;
     }
+    
+    public void setRequestConfirmed(ArrayList<String> list) {
+        this.requestConfirmed = list;
+    }
 
     public void addToFlag(String u){
         if(!this.flag.contains(u)) {
@@ -64,8 +71,17 @@ public class User implements Serializable {
         }
     }
 
+    public void addToRequestConfirmed(String u){
+        if(!this.requestConfirmed.contains(u)) {
+            this.requestConfirmed.add(u);
+        }
+    }
     public void removeFromFlag(String u){
         this.flag.remove(u);
+    }
+
+    public void removeFromRequestConfirmed(String u){
+        this.requestConfirmed.remove(u);
     }
 
 
