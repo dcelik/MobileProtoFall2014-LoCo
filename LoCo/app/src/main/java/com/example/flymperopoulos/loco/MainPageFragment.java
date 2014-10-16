@@ -164,12 +164,12 @@ public class MainPageFragment extends Fragment implements LocationListener{
         String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
 
 //                      https://maps.googleapis.com/maps/api/geocode/json?sensor=true&latlng=42.29306196,-71.26257942&key=AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4
-        String url1 = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
+//        String url1 = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
         String url2 = "https://maps.googleapis.com/maps/api/geocode/json?latlng=42.29306196,-71.26257942&key=AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
 
 
 // Request a string response from the provided URL.
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url1, null,
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url2, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
