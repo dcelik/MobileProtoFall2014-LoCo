@@ -86,6 +86,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         mutualContacts = ((MyActivity)getActivity()).mutualContacts;
 
+        ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
+
         requestListview.setAdapter(requestAdapter);
         fb.child(currentUser.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -188,12 +190,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
         queue.add(jsonRequest);
 
 //      GETTING THE CONTACTS
-
         compareDatabaselist(readContacts());
         contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, mutualContacts);
-        ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
-
         contactListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
@@ -205,11 +204,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         // continue with delete
                         User requestUser = contactInfoAdapter.getItem(i);
                         requestUser.addToFlag(currentUser.getPhoneNumber());
-
-                        Log.d("user", requestUser.getFlag().toString());
-                        Log.d("user", requestUser.getLatitude().toString());
-                        Log.d("user", requestUser.getLongitude().toString());
-                        Log.d("user", requestUser.getPhoneNumber().toString());
                         fb.child(requestUser.getPhoneNumber()).setValue(requestUser);
 
                         Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
@@ -273,7 +267,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 for (DataSnapshot child : snapshot.getChildren()) {
                     for (User u : contacts) {
                         if (child.getValue(User.class).getPhoneNumber().equals(u.getPhoneNumber())) {
-                            mutualContacts.add(child.getValue(User.class));
+                            if(!mutualContacts.contains(child.getValue(User.class))){
+                                mutualContacts.add(child.getValue(User.class));
+                            }
                         }
                     }
                 }
