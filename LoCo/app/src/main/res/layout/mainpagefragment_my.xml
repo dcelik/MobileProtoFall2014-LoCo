@@ -8,11 +8,10 @@
     <ImageView
         android:id="@+id/youAt"
         android:src="@drawable/loco"
-        android:layout_above="@+id/lat"
-        android:background="#00ffff"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:layout_width="wrap_content"
-        android:layout_height="53dp" />
+        android:layout_height="28dp" />
 
     <TextView
         android:id="@+id/display"
@@ -20,35 +19,14 @@
         android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:layout_toRightOf="@+id/youAt"
+        android:layout_toEndOf="@+id/youAt"
         android:gravity="center"
-        android:background="#00ffff"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/lat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:layout_below="@id/display"
-        android:textColor="#FFFFFF"
-        android:text="Latitude: "
-        android:textSize="20dip" >
-    </TextView>
-
-    <TextView
-        android:id="@+id/longi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dip"
-        android:layout_below="@id/lat"
-        android:textColor="#FFFFFF"
-        android:text="Longitude"
-        android:textSize="20dip" />
-
     <ImageView
         android:id="@+id/locationRequests"
-        android:layout_below="@+id/longi"
+        android:layout_below="@+id/youAt"
         android:src="@drawable/connect"
         android:background="#00ffff"
         android:layout_width="wrap_content"
@@ -65,9 +43,8 @@
         android:layout_toEndOf="@+id/locationRequests"
         android:text="@string/location_Requests"
         android:textColor="#FFFFFF"
-        android:layout_below="@id/longi"
+        android:layout_below="@id/display"
         android:layout_centerHorizontal="true" />
-
 
     <ListView
         android:id="@+id/requests"
@@ -75,6 +52,7 @@
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:textColor="#FFFFFF"
+        android:scrollbarStyle="insideInset"
         android:gravity="center_horizontal"
         android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"
@@ -141,5 +119,25 @@
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_below="@id/changtomap"
+        android:textColor="#FFFFFF"
+        android:text="Latitude: "
+        android:textSize="20dip" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/longi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_below="@id/lat"
+        android:textColor="#FFFFFF"
+        android:text="Longitude"
+        android:textSize="20dip" />
 
 </RelativeLayout>
