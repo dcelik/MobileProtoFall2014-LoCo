@@ -102,11 +102,13 @@ public class LoginFragment extends Fragment{
                                 currentUser.setFlag(grabbedUser.getFlag());
                                 fb.child(phonenumber).setValue(currentUser);
                                 activity.changeToMainPage();
+                                ((MyActivity)getActivity()).notificationStart();
                                 return;
                             }
 
                         }
                         fb.child(phonenumber).setValue(currentUser);
+                        ((MyActivity)getActivity()).notificationStart();
                         activity.changeToMainPage();
                     }
 
@@ -115,6 +117,7 @@ public class LoginFragment extends Fragment{
                         Log.i("DebugDebug", "The read failed: " + firebaseError.getMessage());
                     }
                 });
+
             }
         });
         return rootView;

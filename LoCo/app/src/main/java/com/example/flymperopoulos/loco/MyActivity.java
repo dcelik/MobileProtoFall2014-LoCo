@@ -9,11 +9,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -26,6 +30,7 @@ public class MyActivity extends Activity {
     User currentUser;
     ArrayList<User> mutualContacts;
     ArrayList<User> contactLocations;
+    int notificatoinid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,18 +101,56 @@ public class MyActivity extends Activity {
     }
 
     @SuppressWarnings("deprecation")
-    public void notify(View vobj){
+    public void popMessage(String username){
         String title = "New request!";
-        String subject = " requests your location!";
+        String subject = username + " requests your location!";
         String body = "";
         NM=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notify=new Notification(android.R.drawable.
-                stat_notify_more,title,System.currentTimeMillis());
+        Notification notify=new Notification(R.drawable.iclogo,title,System.currentTimeMillis());
         PendingIntent pending= PendingIntent.getActivity(
                 getApplicationContext(), 0, new Intent(), 0);
-        notify.setLatestEventInfo(getApplicationContext(),subject,body,pending);
-        NM.notify(0, notify);
+        notify.setLatestEventInfo(getApplicationContext(), subject, body, pending);
+        NM.notify(notificatoinid,notify);
+        notificatoinid++;
     }
 
+    public void notificationStart(){
+        fb.child(currentUser.getPhoneNumber()).child("flag").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    fb.child(dataSnapshot.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            popMessage(dataSnapshot.getValue(User.class).getName());
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
 
 }
