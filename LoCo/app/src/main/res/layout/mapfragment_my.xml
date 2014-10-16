@@ -10,9 +10,12 @@
         <!--class="com.google.android.gms.maps.SupportMapFragment" />-->
     <Button
         android:id="@+id/backMap"
-        android:text="Back"
-        android:textSize="20dp"
-        android:layout_width="wrap_content"
+        android:text="@string/back"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textSize="40sp"
+        android:background="@drawable/mapbutton"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
     <com.google.android.gms.maps.MapView

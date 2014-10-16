@@ -138,7 +138,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
                             String stuff = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
 //                            String address = response.get("result").toString();
                             //Log.d(stuff, "What is in the json\n\n\n\n");
-                            String currentPosition = "Current Location " + stuff;
+                            String currentPosition = stuff;
                             display.setText(currentPosition);
 
                         } catch (JSONException e) {
