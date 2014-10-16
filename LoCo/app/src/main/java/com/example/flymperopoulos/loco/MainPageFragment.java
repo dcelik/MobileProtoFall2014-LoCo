@@ -56,7 +56,8 @@ public class MainPageFragment extends Fragment implements LocationListener{
     ArrayList<User> mutualContacts;
     ArrayList<User> requestContacts;
     ArrayList<User> contactLocations;
-    String address;
+    String key = "AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
+    RequestQueue queue;
 
     Firebase fb;
     HandlerDatabase db;
@@ -85,60 +86,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
 
+        queue = Volley.newRequestQueue(getActivity());
+
         requestListview.setAdapter(requestAdapter);
-        fb.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                requestContacts.clear();
-                if(dataSnapshot!=null) {
-                    Log.d("called", "does it call?");
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        if(child.getName().equals(currentUser.getPhoneNumber())) {
-                            ArrayList<String> flags = child.getValue(User.class).getFlag();
-                            for(String s: flags){
-                                requestContacts.add(dataSnapshot.child(s).getValue(User.class));
-                            }
-                            requestAdapter.notifyDataSetChanged();
-                        }
-                        Log.d("called", "second does it call?");
-                        for(User u: mutualContacts){
-                            Log.d("called", "what about does it call?");
-                            Log.d("Number", child.getValue(User.class).getPhoneNumber());
-                            if(child.getValue(User.class).getRequestConfirmed().contains(u.getPhoneNumber())){
-                                contactLocations.add(u);
-                                Toast.makeText(context, u.getName()+ " has responded", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-//        fb.child(currentUser.getPhoneNumber()).child("requestConfirmed").
-//        fb.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for(DataSnapshot child : dataSnapshot.getChildren()){
-////                    child.getValue(User.class);
-//                    for(User u: mutualContacts){
-//                        Log.d("Number" ,child.getValue(User.class).getPhoneNumber());
-//                        if(child.getValue(User.class).getPhoneNumber().equals(u.getPhoneNumber())){
-//                            contactLocations.add(u);
-//                            Toast.makeText(context, "YO", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//                }
-//            }
-//            @Override
-//            public void onCancelled(FirebaseError firebaseError) {
-//
-//            }
-//        });
-
         requestListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
@@ -158,15 +108,14 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         }
                         //
 
-
-
-
                         fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
+
+                        Log.d("debug",fb.child(sendUser).child("requestConfirmed").toString());
                         ArrayList<String> temp = new ArrayList<String>();
                         temp.add(currentUser.getPhoneNumber());
 
                         fb.child(sendUser).child("requestConfirmed").setValue(temp);
-
+//                        fb.child(sendUser).child("requestConfirmed").push().setValue(currentUser.getPhoneNumber());
                     }
                 })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -178,6 +127,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         .show();
             }
         });
+
 
         Button changetomap = (Button) rootView.findViewById(R.id.changtomap);
         changetomap.setOnClickListener(new View.OnClickListener() {
@@ -210,24 +160,22 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         String latlng = "latlng=42.292657,-71.263114";
 
-        String key = "AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
-//        String place = getAddress(url);
-//        Log.d("Address", place);
 
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-//
-//// Request a string response from the provided URL.
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
+
+//                      https://maps.googleapis.com/maps/api/geocode/json?sensor=true&latlng=42.29306196,-71.26257942&key=AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4
+        String url1 = "https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
+        String url2 = "https://maps.googleapis.com/maps/api/geocode/json?latlng=42.29306196,-71.26257942&key=AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
+
+
+// Request a string response from the provided URL.
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url1, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             String address = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
-//                            String address = response.get("result").toString();
-                            //Log.d(stuff, "What is in the json\n\n\n\n");
                             display.setText(address);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -270,29 +218,68 @@ public class MainPageFragment extends Fragment implements LocationListener{
             }
         });
 
-        return rootView;
-    }
-    public String getAddress(String url){
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            address = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
+        fb.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                requestContacts.clear();
+                if(dataSnapshot!=null) {
+                    Log.d("does it call", "value Listener?");
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        if(child.getName().equals(currentUser.getPhoneNumber())) {
+                            ArrayList<String> flags = child.getValue(User.class).getFlag();
+                            for(String s: flags){
+                                requestContacts.add(dataSnapshot.child(s).getValue(User.class));
+                            }
+                            requestAdapter.notifyDataSetChanged();
+                        }
+                        Log.d("does it call", "end of the first for loop");
+                        for(User u: mutualContacts){
+                            Log.d("does it call", "start of the second for loop");
+                            Log.d("Number", child.getValue(User.class).getPhoneNumber());
+                            if(child.getValue(User.class).getRequestConfirmed().contains(u.getPhoneNumber())){
+                                contactLocations.add(u);
+                                child.getValue(User.class).getRequestConfirmed().remove(u.getPhoneNumber());
+                                Toast.makeText(context, u.getName()+ " has responded", Toast.LENGTH_LONG).show();
+                                fb.child(currentUser.getPhoneNumber()).child("requestConfirmed").setValue(null);
+                                String url = getUrl(getLatLng(u), key);
+                                Log.d("address", url);
+                                JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                                        new Response.Listener<JSONObject>() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                try {
+                                                    Log.d("address", "printing1");
+                                                    String address = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
+                                                    display.setText(address);
+                                                    Log.d("address", address);
+                                                    Log.d("address", "printing1a");
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        error.printStackTrace();
+                                    }
+                                });
+                                queue.add(jsonRequest);
+                                Log.d("address", "printing2");
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+//                                a way to remove the value from the confirmed list without doing the setValue thing
+
+                            }
                         }
                     }
-                }, new Response.ErrorListener() {
+                }
+            }
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
         });
-        queue.add(jsonRequest);
-        return address;
+
+        return rootView;
     }
 
     public ArrayList<User> readContacts() {
@@ -384,14 +371,17 @@ public class MainPageFragment extends Fragment implements LocationListener{
     @Override
     public void onProviderDisabled(String s) {
     }
+//    String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
+//    String latlng = "latlng=42.292657,-71.263114";
 
     public String getUrl(String latlng, String key){
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?" + latlng + "&key=" + key;
         return url;
     }
 
     public String getLatLng(User user){
-        return user.getLatitude().toString() + user.getLongitude().toString();
+        Log.d("actual address", "latlng="+ user.getLatitude().toString() +","+ user.getLongitude().toString());
+        return "latlng="+ user.getLatitude().toString() +","+ user.getLongitude().toString();
     }
 
 
