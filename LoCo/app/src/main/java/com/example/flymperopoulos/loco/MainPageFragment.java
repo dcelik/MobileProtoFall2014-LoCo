@@ -54,6 +54,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
     UserAdapter contactInfoAdapter;
     ArrayList<User> mutualContacts;
     ArrayList<User> requestContacts;
+    ArrayList<User> contactLocations;
     String address;
 
     Firebase fb;
@@ -78,6 +79,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         fb = ((MyActivity)getActivity()).fb;
         mutualContacts = ((MyActivity)getActivity()).mutualContacts;
         requestContacts = ((MyActivity)getActivity()).requestContacts;
+        contactLocations = ((MyActivity)getActivity()).contactLocations;
         final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, requestContacts);
 //        final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, list);
 

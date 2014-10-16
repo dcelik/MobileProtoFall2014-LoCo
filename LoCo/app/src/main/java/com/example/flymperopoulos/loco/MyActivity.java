@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -120,39 +121,62 @@ public class MyActivity extends Activity {
         fb.child(currentUser.getPhoneNumber()).child("flag").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    fb.child(dataSnapshot.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            popMessage(dataSnapshot.getValue(User.class).getName());
-                        }
+                fb.child(dataSnapshot.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        popMessage(dataSnapshot.getValue(User.class).getName());
+                    }
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-
-                        }
-                    });
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {}
+                });
             }
-
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
+            public void onCancelled(FirebaseError firebaseError) {}
         });
     }
+
+//    public void locationSending(){
+//        fb.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot child; dataSnapshot.getChildren()){
+//                    fb.child("flag").addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {}
+//                        @Override
+//                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+//                        @Override
+//                        public void onChildRemoved(DataSnapshot ds) {
+//                            fb.child(dataSnapshot.getValue().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//                                    popMessage(dataSnapshot.getValue(User.class).getName());
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(FirebaseError firebaseError) {}
+//                            });
+//                        }
+//                        @Override
+//                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+//                        @Override
+//                        public void onCancelled(FirebaseError firebaseError) {}
+//                    })
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        })
+//    }
 
 }
