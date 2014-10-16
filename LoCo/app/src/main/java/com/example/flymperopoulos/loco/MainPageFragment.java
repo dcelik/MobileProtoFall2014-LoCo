@@ -58,6 +58,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
     private TextView longitudeField;
     UserAdapter contactInfoAdapter;
     ArrayList<User> mutualContacts;
+    String address;
 
     Firebase fb;
     HandlerDatabase db;
@@ -163,19 +164,19 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         String key = "AIzaSyBeknu4C9t4Dii04H8imC-ygXLvprFLfv4";
         String url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=true&" + latlng + "&key=" + key;
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-// Request a string response from the provided URL.
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+//
+//// Request a string response from the provided URL.
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            String stuff = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
+                            String address = response.getJSONArray("results").getJSONObject(1).get("formatted_address").toString();
 //                            String address = response.get("result").toString();
                             //Log.d(stuff, "What is in the json\n\n\n\n");
-                            String currentPosition = stuff;
-                            display.setText(currentPosition);
+                            display.setText(address);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -220,10 +221,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
         });
 
         return rootView;
-    }
-
-    public ArrayList<User> getRequests(){
-        return null;
     }
 
     public ArrayList<User> readContacts() {
@@ -281,10 +278,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-    }
-
-    public String getAddress(){
-        return null;
     }
 
     @Override
