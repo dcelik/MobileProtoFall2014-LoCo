@@ -91,6 +91,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 requestContacts.clear();
                 if(dataSnapshot!=null) {
+                    Log.d("called", "does it call?");
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         if(child.getName().equals(currentUser.getPhoneNumber())) {
                             ArrayList<String> flags = child.getValue(User.class).getFlag();
@@ -99,24 +100,14 @@ public class MainPageFragment extends Fragment implements LocationListener{
                             }
                             requestAdapter.notifyDataSetChanged();
                         }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        fb.child(currentUser.getPhoneNumber()).child("requestConfirmed").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
-                    for(User u: mutualContacts){
-                        if(child.getValue(String.class).equals(u.getPhoneNumber())){
-                            contactLocations.add(u);
-
+                        Log.d("called", "second does it call?");
+                        for(User u: mutualContacts){
+                            Log.d("called", "what about does it call?");
+                            Log.d("Number", child.getValue(User.class).getPhoneNumber());
+                            if(child.getValue(User.class).getRequestConfirmed().contains(u.getPhoneNumber())){
+                                contactLocations.add(u);
+                                Toast.makeText(context, u.getName()+ " has responded", Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                 }
@@ -126,6 +117,27 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
             }
         });
+
+//        fb.child(currentUser.getPhoneNumber()).child("requestConfirmed").
+//        fb.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for(DataSnapshot child : dataSnapshot.getChildren()){
+////                    child.getValue(User.class);
+//                    for(User u: mutualContacts){
+//                        Log.d("Number" ,child.getValue(User.class).getPhoneNumber());
+//                        if(child.getValue(User.class).getPhoneNumber().equals(u.getPhoneNumber())){
+//                            contactLocations.add(u);
+//                            Toast.makeText(context, "YO", Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                }
+//            }
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//
+//            }
+//        });
 
         requestListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -144,6 +156,11 @@ public class MainPageFragment extends Fragment implements LocationListener{
                             }
                             contactInfoAdapter.notifyDataSetChanged();
                         }
+                        //
+
+
+
+
                         fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
                         ArrayList<String> temp = new ArrayList<String>();
                         temp.add(currentUser.getPhoneNumber());
