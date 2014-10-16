@@ -56,7 +56,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
     private Context context;
     private TextView latituteField;
     private TextView longitudeField;
-    ArrayList<User> listUsers;
+    UserAdapter contactInfoAdapter;
+    Map<String, User> mutualHashmap;
+
 
     Firebase fb;
     HandlerDatabase db;
@@ -83,40 +85,17 @@ public class MainPageFragment extends Fragment implements LocationListener{
         final UserAdapter requestAdapter = new UserAdapter(getActivity(), R.layout.contact_item, list);
 
         requestListview.setAdapter(requestAdapter);
-        fb.addChildEventListener(new ChildEventListener() {
-            // Retrieve new posts as they are added to Firebase
+        fb.child(currentUser.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
-                for (DataSnapshot child : snapshot.getChildren()) {
-                    Log.d("yo", child.getValue().toString());
-                    User grabbedUser = child.getValue(User.class);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
+                list.addAll(dataSnapshot.getValue(User.class).getFlag());
+                requestAdapter.notifyDataSetChanged();
+            }
 
-                    if(grabbedUser.getPhoneNumber().equals(currentUser.getPhoneNumber())){
-                        for(User u : grabbedUser.getFlag()){
-                            list.add(u);
-                            requestAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }
-            }
             @Override
-            public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
-                String title = (String) snapshot.child("title").getValue();
-                System.out.println("The updated post title is " + title);
-            }
-            @Override
-            public void onChildRemoved(DataSnapshot snapshot) {
-                String title = (String) snapshot.child("title").getValue();
-                System.out.println("The blog post titled " + title + " has been deleted");
-            }
-            @Override
-            public void onChildMoved(DataSnapshot snapshot, String f) {
-                String title = (String) snapshot.child("title").getValue();
-                System.out.println("The blog post titled " + title + " has been deleted");
-            }
-            @Override
-            public void onCancelled(FirebaseError error) {
-                System.out.println(error.getMessage());
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
         });
 
@@ -206,9 +185,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
 //      GETTING THE CONTACTS
 
-        ArrayList<User> mutualContacts = compareDatabaselist(readContacts());
-        Log.d("mutual", mutualContacts.toString());
-        final UserAdapter contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, mutualContacts);
+        compareDatabaselist(readContacts());
+        //Log.d("mutual", mutualContacts.toString());
+        contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, new ArrayList<User>());
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
 
@@ -225,13 +204,14 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         Log.d("current User", currentUser.getPhoneNumber().toString());
                         Log.d("request User", requestUser.getPhoneNumber().toString());
                         requestUser.addToFlag(currentUser);
+//                        fb.child(requestUser.getPhoneNumber()).child("flag").
                         fb.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot child : dataSnapshot.getChildren()){
                                     User grabbedUser = child.getValue(User.class);
                                     if (grabbedUser.getPhoneNumber().equals(requestUser.getPhoneNumber())) {
-                                        fb.child(requestUser.getPhoneNumber()).setValue(requestUser);
+                                        fb.child(currentUser.getPhoneNumber()).setValue(currentUser);
                                     }
                                 }
                                 Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
@@ -252,7 +232,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         .show();
             }
         });
-        
 
         return rootView;
     }
@@ -295,8 +274,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         return arrContacts;
     }
 //    comparing sets instead of Users
-    public ArrayList<User> compareDatabaselist(final ArrayList<User> contacts) {
-        final ArrayList<User> sameUsers = new ArrayList<User>();
+    public void compareDatabaselist(final ArrayList<User> contacts) {
         fb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -306,16 +284,17 @@ public class MainPageFragment extends Fragment implements LocationListener{
                 }
                 for (User u : contacts) {
                     if (listUsers.contains(u.getPhoneNumber())) {
-                        sameUsers.add(u);
+                        contactInfoAdapter.add(u);
                     }
                 }
+                contactInfoAdapter.notifyDataSetChanged();
+
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-        return sameUsers;
     }
 
     public String getAddress(){
