@@ -86,13 +86,23 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
         mutualHashmap = new HashMap<String, User>();
 
+        compareDatabaselist(readContacts());
+        //Log.d("mutual", mutualContacts.toString());
+        contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, new ArrayList<User>());
+        ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
+        contactListview.setAdapter(contactInfoAdapter);
+
         requestListview.setAdapter(requestAdapter);
         fb.child(currentUser.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 list.clear();
                 ArrayList<String> temp  = dataSnapshot.getValue(User.class).getFlag();
-                
+                for(String s : temp){
+                    if(mutualHashmap.containsKey(s)){
+                        list.add(mutualHashmap.get(s).getPhoneNumber());
+                    }
+                }
                 list.addAll(dataSnapshot.getValue(User.class).getFlag());
                 requestAdapter.notifyDataSetChanged();
             }
@@ -189,11 +199,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
 //      GETTING THE CONTACTS
 
-        compareDatabaselist(readContacts());
-        //Log.d("mutual", mutualContacts.toString());
-        contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, new ArrayList<User>());
-        ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
-        contactListview.setAdapter(contactInfoAdapter);
+
 
         contactListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -209,39 +215,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
 
                         fb.child(requestUser.getPhoneNumber()).setValue(requestUser);
                         Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
-//                        fb.child(requestUser.getPhoneNumber()).addValueEventListener(new ValueEventListener() {
-//                            ArrayList<String> tempRequests = new ArrayList<String>();
-//
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-////                                tempRequests = dataSnapshot.getValue(User.class).getFlag();
-//                                dataSnapshot.getValue(User.class).getFlag().add(currentUser.getPhoneNumber());
-//
-//                                requestAdapter.notifyDataSetChanged();
-//
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(FirebaseError firebaseError) {
-//
-//                            }
-//                        });
-//                        fb.addListenerForSingleValueEvent(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                for (DataSnapshot child : dataSnapshot.getChildren()){
-//                                    User grabbedUser = child.getValue(User.class);
-//                                    if (grabbedUser.getPhoneNumber().equals(requestUser.getPhoneNumber())) {
-//                                        fb.child(requestUser.getPhoneNumber()).setValue(currentUser);
-//                                    }
-//                                }
-//                                Toast.makeText(context, "Your request has been sent", Toast.LENGTH_SHORT).show();
-//                            }
-//                            @Override
-//                            public void onCancelled(FirebaseError firebaseError) {
-//                                System.out.println("The read failed: " + firebaseError.getMessage());
-//                            }
-//                        });
                     }
                 })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -307,7 +280,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
                     mutualHashmap.put(u.getPhoneNumber(), u);
                     if (listUsers.contains(u.getPhoneNumber())) {
                         contactInfoAdapter.add(u);
-
                     }
                 }
                 contactInfoAdapter.notifyDataSetChanged();

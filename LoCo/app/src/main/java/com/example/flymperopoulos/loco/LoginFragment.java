@@ -87,9 +87,7 @@ public class LoginFragment extends Fragment {
                                 currentUser.setLongitude(grabbedUser.getLongitude());
                                 currentUser.setLatitude(grabbedUser.getLatitude());
                                 currentUser.setName(grabbedUser.getName());
-
                                 activity.changeToMainPage();
-
                                 return;
                             }
 
