@@ -17,7 +17,7 @@
     <TextView
         android:id="@+id/display"
         android:layout_width="fill_parent"
-        android:textSize="40sp"
+        android:textSize="20sp"
         android:textColor="#FFFFFF"
         android:layout_toRightOf="@+id/youAt"
         android:gravity="center"
@@ -119,10 +119,10 @@
 
     <ImageView
         android:id="@+id/mapView"
-        android:layout_below="@+id/contacts_list"
         android:src="@drawable/map"
         android:background="#00ffff"
         android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_height="53dp"
     />
 
@@ -138,7 +138,7 @@
         android:layout_toRightOf="@id/mapView"
         android:layout_toEndOf="@+id/mapView"
         android:background="@drawable/mapbutton"
-        android:layout_below="@id/contacts_list"
+        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content" />
 
 

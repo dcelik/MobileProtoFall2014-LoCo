@@ -11,6 +11,7 @@
     >
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/linlayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -28,6 +29,7 @@
         android:hint="Username"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
         />
 
     <EditText
@@ -54,18 +56,18 @@
         android:textColor="#ffffff"
         android:textSize="25sp"
         android:gravity="center"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="307dp"
-        android:background="@drawable/mybutton"
+        android:background="@drawable/mapbutton"
         android:layout_height="wrap_content"
+        android:layout_below="@id/linlayout"
         />
 
     <ImageView
         android:id="@+id/imageLabel"
-        android:layout_marginTop="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:paddingBottom="50dp"
+        android:layout_above="@id/linlayout"
         android:layout_centerHorizontal="true"
         android:src="@drawable/iclogo"
         />
