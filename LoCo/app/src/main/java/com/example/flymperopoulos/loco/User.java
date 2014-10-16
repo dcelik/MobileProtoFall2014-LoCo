@@ -59,7 +59,9 @@ public class User implements Serializable {
     }
 
     public void addToFlag(String u){
-        this.flag.add(u);
+        if(!this.flag.contains(u)) {
+            this.flag.add(u);
+        }
     }
 
     public void removeFromFlag(String u){
