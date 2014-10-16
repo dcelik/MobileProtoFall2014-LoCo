@@ -88,7 +88,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
             @Override
             public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
                 for (DataSnapshot child : snapshot.getChildren()) {
+                    Log.d("yo", child.getValue().toString());
                     User grabbedUser = child.getValue(User.class);
+
                     if(grabbedUser.getPhoneNumber().equals(currentUser.getPhoneNumber())){
                         for(User u : grabbedUser.getFlag()){
                             list.add(u);
@@ -96,26 +98,22 @@ public class MainPageFragment extends Fragment implements LocationListener{
                         }
                     }
                 }
-
             }
             @Override
             public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
                 String title = (String) snapshot.child("title").getValue();
                 System.out.println("The updated post title is " + title);
             }
-
             @Override
             public void onChildRemoved(DataSnapshot snapshot) {
                 String title = (String) snapshot.child("title").getValue();
                 System.out.println("The blog post titled " + title + " has been deleted");
             }
-
             @Override
             public void onChildMoved(DataSnapshot snapshot, String f) {
                 String title = (String) snapshot.child("title").getValue();
                 System.out.println("The blog post titled " + title + " has been deleted");
             }
-
             @Override
             public void onCancelled(FirebaseError error) {
                 System.out.println(error.getMessage());
@@ -209,6 +207,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
 //      GETTING THE CONTACTS
 
         ArrayList<User> mutualContacts = compareDatabaselist(readContacts());
+        Log.d("mutual", mutualContacts.toString());
         final UserAdapter contactInfoAdapter= new UserAdapter(getActivity(), R.layout.contact_item, mutualContacts);
         ListView contactListview = (ListView)rootView.findViewById(R.id.contacts_list);
         contactListview.setAdapter(contactInfoAdapter);
@@ -223,7 +222,9 @@ public class MainPageFragment extends Fragment implements LocationListener{
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
                         final User requestUser = contactInfoAdapter.getItem(i);
-                        currentUser.addToFlag(requestUser);
+                        Log.d("current User", currentUser.getPhoneNumber().toString());
+                        Log.d("request User", requestUser.getPhoneNumber().toString());
+                        requestUser.addToFlag(currentUser);
                         fb.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -277,7 +278,6 @@ public class MainPageFragment extends Fragment implements LocationListener{
             contactNumber = contactNumber.replaceAll("[^[0-9]*$]", "");
             if(contactNumber.length()>10){
                 contactNumber = contactNumber.substring(1);
-                Log.d("Number", contactNumber.toString());
             }
             user = new User();
             user.setName(contactName);
@@ -294,6 +294,7 @@ public class MainPageFragment extends Fragment implements LocationListener{
         Log.d("END","Got all Contacts");
         return arrContacts;
     }
+//    comparing sets instead of Users
     public ArrayList<User> compareDatabaselist(final ArrayList<User> contacts) {
         final ArrayList<User> sameUsers = new ArrayList<User>();
         fb.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -1,12 +1,13 @@
 package com.example.flymperopoulos.loco;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Created by dcelik on 10/10/14.
  */
-public class User {
+public class User implements Serializable {
     String username, phonenumber;
     Double latitude, longitude;
     ArrayList<User> flag;

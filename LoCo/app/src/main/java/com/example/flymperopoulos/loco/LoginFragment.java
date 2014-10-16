@@ -69,40 +69,41 @@ public class LoginFragment extends Fragment {
                 }
                 Toast.makeText(context, "Welcome, " + userName.getText().toString() + "!", Toast.LENGTH_SHORT).show();
 
-                MyActivity activity = (MyActivity)getActivity();
+                final MyActivity activity = (MyActivity)getActivity();
                 final String username = userName.getText().toString();
                 final String phonenumber = userPhone.getText().toString();
                 currentUser.setName(username);
                 currentUser.setPhoneNumber(phonenumber);
-                Query userquery = fb;
-                userquery.addListenerForSingleValueEvent(new ValueEventListener() {
+//                Query userquery = fb;
+//                Log.i("DebugDebug", phonenumber);
+                fb.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        ArrayList<User> users = new ArrayList<User>();
-                        Boolean found = false;
-                        for (DataSnapshot child : dataSnapshot.getChildren()){
-                            if(!found) {
+//                        Log.i("DebugDebug", "Data Changed");
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                            Log.i("DebugDebug", child.getName());
+                            if (child.getName().equals(phonenumber)) {
                                 User grabbedUser = child.getValue(User.class);
-                                users.add(grabbedUser);
-                                if (grabbedUser.getPhoneNumber().equals(phonenumber)) {
-                                    found = true;
-                                    currentUser.setLongitude(grabbedUser.getLongitude());
-                                    currentUser.setLatitude(grabbedUser.getLatitude());
-                                    currentUser.setName(grabbedUser.getName());
-                                }
+                                currentUser.setLongitude(grabbedUser.getLongitude());
+                                currentUser.setLatitude(grabbedUser.getLatitude());
+                                currentUser.setName(grabbedUser.getName());
+
+                                activity.changeToMainPage();
+
+                                return;
                             }
+
                         }
-                        if(!found){
-                            fb.child(phonenumber).setValue(currentUser);
-                        }
+                        fb.child(phonenumber).setValue(currentUser);
+                        activity.changeToMainPage();
                     }
+
                     @Override
                     public void onCancelled(FirebaseError firebaseError) {
-                        System.out.println("The read failed: " + firebaseError.getMessage());
+                        Log.i("DebugDebug", "The read failed: " + firebaseError.getMessage());
                     }
                 });
 
-                activity.changeToMainPage();
             }
         });
         return rootView;
