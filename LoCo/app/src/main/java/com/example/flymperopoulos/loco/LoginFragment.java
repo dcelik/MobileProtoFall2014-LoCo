@@ -9,10 +9,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -24,7 +27,7 @@ import com.firebase.client.ValueEventListener;
 /**
  * Created by james on 10/9/14.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment{
 
     private Context context;
     public LoginFragment(){}
@@ -45,8 +48,22 @@ public class LoginFragment extends Fragment {
         fb = ((MyActivity)getActivity()).fb;
         currentUser = ((MyActivity)getActivity()).currentUser;
 
+
         final EditText userName = (EditText)rootView.findViewById(R.id.username);
         final EditText userPhone = (EditText)rootView.findViewById(R.id.phone);
+        final RelativeLayout relativeLayout = (RelativeLayout)rootView.findViewById(R.id.rellayout);
+        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(v==relativeLayout){
+                    InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(userName.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(userPhone.getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         Button loginButton = (Button)rootView.findViewById(R.id.login_button);
 
@@ -102,4 +119,6 @@ public class LoginFragment extends Fragment {
         });
         return rootView;
     }
+
+
 }
